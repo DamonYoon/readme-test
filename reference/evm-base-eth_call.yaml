@@ -3,7 +3,7 @@ info:
   title: evm-base-eth_call
   version: 1.2.1
 servers:
-  - url: https://{protocol-network}.nodit.io/
+  - url: https://{base-network}.nodit.io/
     variables:
       base-network:
         default: base-mainnet
