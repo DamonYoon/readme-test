@@ -1770,6 +1770,13 @@ paths:
           schema:
             type: string
             default: '1234'
+        - name: ASDF
+          in: header
+          required: true
+          description: ASDF
+          schema:
+            type: string
+            default: asdf
       responses:
         '200':
           description: Successful Response
