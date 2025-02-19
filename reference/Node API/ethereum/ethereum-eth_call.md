@@ -6,4 +6,3 @@ api:
   operationId: ethereum-eth_call
 hidden: false
 ---
-
