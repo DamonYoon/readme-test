@@ -8,6 +8,7 @@ recipe:
 ---
 ```shell Shell
 npm init
+npm install
 ```
 
 ```javascript JavaScript
@@ -20,7 +21,14 @@ npm init
 
 # Step 1
 
-<!-- shell@ -->
+<!-- shell@1 -->
 <!-- javascript@ -->
 
 Init project
+
+# Step 2
+
+<!-- shell@2 -->
+<!-- javascript@ -->
+
+Install libraries
