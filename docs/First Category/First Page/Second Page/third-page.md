@@ -2,6 +2,7 @@
 title: Third Page
 deprecated: false
 hidden: false
+slug: test-page
 metadata:
   title: My SEO Title
   description: A brief description for SEO
