@@ -1,5 +1,4 @@
 ---
-title: evm-eth_call
+title: ethereum
 hidden: false
 ---
-
