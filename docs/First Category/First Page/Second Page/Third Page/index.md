@@ -1,5 +1,5 @@
 ---
-title: Second Page
+title: Third Page
 deprecated: false
 hidden: false
 metadata:
@@ -11,4 +11,4 @@ metadata:
   robots: index # Search Visibility
 ---
 
-2nd Page
+Third page

@@ -6,6 +6,4 @@ metadata:
   robots: index
 ---
 
-wow
-
-change
+| first page
