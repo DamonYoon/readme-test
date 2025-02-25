@@ -1,0 +1,27 @@
+components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: "페이지 번호"
+      required: false
+      schema:
+        type: integer
+        default: 1
+
+    Limit:
+      name: limit
+      in: query
+      description: "한 페이지당 아이템 개수"
+      required: false
+      schema:
+        type: integer
+        default: 10
+
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      description: "Bearer 토큰을 포함한 인증 헤더"
+      required: true
+      schema:
+        type: string

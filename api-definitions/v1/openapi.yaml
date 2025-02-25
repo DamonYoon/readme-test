@@ -1,0 +1,19 @@
+openapi: 3.1.0
+info:
+  title: "Upbit API"
+  version: "1.5.6"
+  description: "업비트 오픈 API"
+
+components:
+  schemas:
+    $ref: "./components/schemas.yaml"
+  parameters:
+    $ref: "./components/parameters.yaml"
+  responses:
+    $ref: "./components/responses.yaml"
+  securitySchemes:
+    $ref: "./components/security.yaml"
+
+paths:
+  /accounts:
+    $ref: "./paths/accounts.yaml"
