@@ -1,5 +1,5 @@
 ---
-title: 전체 계좌 조회
+title: Query accounts
 excerpt: |+
   test
 
