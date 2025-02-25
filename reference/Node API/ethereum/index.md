@@ -1,4 +1,0 @@
----
-title: ethereum
-hidden: false
----
