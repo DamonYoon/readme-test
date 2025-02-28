@@ -1,0 +1,31 @@
+openapi: 3.1.0
+info:
+  version: 1.5.6
+  title: Upbit API
+  termsOfService: https://example.com/terms/
+  contact:
+    name: Contact our support
+    email: contact@example.com
+    url: http://example.com/contact
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: >
+    업비트 API 문서 테스트
+tags:
+  - name: Accounts
+    description: "Example Accounts"
+servers:
+  - url: https://api.upbit.com/v1
+paths:
+  "/accounts":
+    $ref: "paths/accounts.yaml"
+components:
+  securitySchemes:
+    jwt:
+      description: |
+        입력한 파라미터에 맞는 JWT 입력
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

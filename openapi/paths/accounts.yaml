@@ -1,0 +1,13 @@
+get:
+  tags:
+    - 자산
+  summary: Test
+  description: "사용자가 보유한 자산 리스트를 조회합니다."
+  operationId: accounts
+  security:
+    - jwt: [] 
+  responses:
+    '200':
+      description: Successfully created a user
+    '400':
+      description: Invalid input
