@@ -2,7 +2,7 @@
 title: 자산 조회
 excerpt: 사용자가 보유한 자산 리스트를 조회합니다.
 api:
-  file: merged_main.yaml
+  file: ../openapi/merged_main.yaml
   operationId: accounts
 hidden: false
 ---
