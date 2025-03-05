@@ -19,7 +19,7 @@ servers:
   - url: https://api.upbit.com/v1
 paths:
   "/accounts":
-    $ref: "paths/accounts.yaml"
+    $ref: "./paths/accounts.yaml"
 components:
   securitySchemes:
     jwt:
@@ -28,4 +28,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-

@@ -1,13 +1,18 @@
 get:
   tags:
     - 자산
-  summary: Test
+    - 계좌
+  summary: 자산 조회
   description: "사용자가 보유한 자산 리스트를 조회합니다."
   operationId: accounts
   security:
-    - jwt: [] 
+    - jwt: []
   responses:
-    '200':
+    "200":
       description: Successfully created a user
-    '400':
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Accounts.yaml
+    "400":
       description: Invalid input

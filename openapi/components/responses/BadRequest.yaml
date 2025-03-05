@@ -2,4 +2,18 @@ description: "404 Bad Request"
 content:
   application/problem+json:
     schema:
-      $ref: ../schemas/Problem.yaml
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+            example:
+              code: RESOURCE_NOT_FOUND
+              message: >-
+                Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
+                RESOURCE2_NAME = RESOURCE2_VALUE, ... }
