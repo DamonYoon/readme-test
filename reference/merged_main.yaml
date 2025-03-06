@@ -1,0 +1,88 @@
+openapi: 3.1.0
+info:
+  version: 1.5.6
+  title: Upbit API
+  termsOfService: https://example.com/terms/
+  contact:
+    name: Contact our support
+    email: contact@example.com
+    url: http://example.com/contact
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: |
+    업비트 API 문서 테스트
+servers:
+  - url: https://api.upbit.com/v1
+tags:
+  - name: Accounts
+    description: Example Accounts
+paths:
+  /accounts:
+    get:
+      tags:
+        - 자산
+      summary: 자산 조회
+      description: 사용자가 보유한 자산 리스트를 조회합니다.
+      operationId: accounts
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: Successfully created a user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currency:
+                    type: string
+                    description: 현재 보유 중인 암호화폐 명
+                  balance:
+                    type: string
+                    description: 주문 가능 금액 또는 수량
+                  locked:
+                    type: string
+                    description: 주문 대기 혹은 출금 등의 이유로 사용이 불가능한 금액 또는 수량
+                  avg_buy_price:
+                    type: string
+                    description: 매수평균가
+                  avg_buy_price_modified:
+                    type: boolean
+                    description: 매수평균가 수정 여부
+                  unit_currency:
+                    type: string
+                    description: 평단가 기준 화폐
+        "400":
+          description: Invalid input
+components:
+  securitySchemes:
+    jwt:
+      type: apiKey
+      name: Authorization
+      description: |
+        입력한 파라미터에 맞는 JWT 입력
+      in: header
+      x-default: test
+  schemas:
+    Accounts:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: 현재 보유 중인 암호화폐 명
+        balance:
+          type: string
+          description: 주문 가능 금액 또는 수량
+        locked:
+          type: string
+          description: 주문 대기 혹은 출금 등의 이유로 사용이 불가능한 금액 또는 수량
+        avg_buy_price:
+          type: string
+          description: 매수평균가
+        avg_buy_price_modified:
+          type: boolean
+          description: 매수평균가 수정 여부
+        unit_currency:
+          type: string
+          description: 평단가 기준 화폐
