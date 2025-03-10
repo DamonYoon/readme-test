@@ -1,0 +1,218 @@
+openapi: 3.1.0
+info:
+  version: 1.5.6
+  title: Upbit API
+  termsOfService: https://example.com/terms/
+  contact:
+    name: Contact our support
+    email: contact@example.com
+    url: http://example.com/contact
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: |
+    업비트 API 문서 테스트
+servers:
+  - url: https://api.upbit.com/v1
+tags:
+  - name: Accounts
+    description: Example Accounts
+paths:
+  /accounts:
+    get:
+      tags:
+        - 자산
+      summary: 자산 조회
+      description: 사용자가 보유한 자산 리스트를 조회합니다.
+      operationId: accounts
+      security:
+        - authToken: []
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currency:
+                    type: string
+                    description: 현재 보유 중인 암호화폐 명
+                  balance:
+                    type: string
+                    description: 주문 가능 금액 또는 수량
+                  locked:
+                    type: string
+                    description: 주문 대기 혹은 출금 등의 이유로 사용이 불가능한 금액 또는 수량
+                  avg_buy_price:
+                    type: string
+                    description: 매수평균가
+                  avg_buy_price_modified:
+                    type: boolean
+                    description: 매수평균가 수정 여부
+                  unit_currency:
+                    type: string
+                    description: 평단가 기준 화폐
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /orders/chance:
+    get:
+      tags:
+        - 주문
+      summary: 주문 가능 정보
+      description: 마켓별 주문 가능 정보를 확인한다.
+      operationId: order-chance
+      security:
+        - authToken: []
+      parameters:
+        - name: market
+          in: query
+          required: true
+          schema:
+            type: string
+            description: 마켓 ID
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bid_fee:
+                    type: string
+                    description: 매수 수수료 비율
+                  ask_fee:
+                    type: string
+                    description: 매도 수수료 비율
+                  market:
+                    type: object
+                    description: 마켓에 대한 정보
+                    properties:
+                      id:
+                        type: string
+                        description: 마켓의 유일키
+                      name:
+                        type: string
+                        description: 마켓 이름
+                      order_types:
+                        type: array
+                        description: 지원 주문 방식 (Deprecated)
+                        items:
+                          type: string
+                      ask_type:
+                        type: array
+                        description: 매도 주문 지원 방식
+                        items:
+                          type: string
+                      bid_types:
+                        type: array
+                        description: 매수 주문 지원 방식
+                        items:
+                          type: string
+                      order_sides:
+                        type: array
+                        description: 지원 주문 종류
+                        items:
+                          type: string
+                      bid:
+                        type: object
+                        description: 매수 시 제약사항
+                        properties:
+                          currency:
+                            type: string
+                            description: 화폐를 의미하는 영문 대문자 코드
+                          price_unit:
+                            type: string
+                            description: 주문금액 단위
+                          min_total:
+                            type: number
+                            description: 최소 매도/매수 금액
+                      ask:
+                        type: object
+                        description: 매도 시 제약사항
+                        properties:
+                          currency:
+                            type: string
+                            description: 화폐를 의미하는 영문 대문자 코드
+                          price_unit:
+                            type: string
+                            description: 주문금액 단위
+                          min_total:
+                            type: number
+                            description: 최소 매도/매수 금액
+                      max_total:
+                        type: string
+                        description: 최대 매도/매수 금액
+                      state:
+                        type: string
+                        description: 마켓 운영 상태
+                  bid_account:
+                    type: object
+                    description: 매수 시 사용하는 화폐의 계좌 상태
+                    properties:
+                      currency:
+                        type: string
+                        description: 화폐를 의미하는 영문 대문자 코드
+                      balance:
+                        type: string
+                        description: 주문가능 금액/수량
+                      locked:
+                        type: string
+                        description: 주문 중 묶여있는 금액/수량
+                      avg_buy_price:
+                        type: string
+                        description: 매수 평균가
+                      avg_buy_price_modified:
+                        type: boolean
+                        description: 매수 평균가 수정 여부
+                      unit_currency:
+                        type: string
+                        description: 평단가 기준 화폐
+                  ask_account:
+                    type: object
+                    description: 매도 시 사용하는 화폐의 계좌 상태
+                    properties:
+                      currency:
+                        type: string
+                        description: 화폐를 의미하는 영문 대문자 코드
+                      balance:
+                        type: string
+                        description: 주문가능 금액/수량
+                      locked:
+                        type: string
+                        description: 주문 중 묶여있는 금액/수량
+                      avg_buy_price:
+                        type: string
+                        description: 매수 평균가
+                      avg_buy_price_modified:
+                        type: boolean
+                        description: 매수 평균가 수정 여부
+                      unit_currency:
+                        type: string
+                        description: 평단가 기준 화폐
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  securitySchemes:
+    authToken:
+      name: JWT token
+      description: |
+        입력한 파라미터에 맞는 JWT 입력
+      type: apiKey
+      in: header
+  responses:
+    BadRequest:
+      description: 404 Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+            example:
+              code: RESOURCE_NOT_FOUND
+              message: 'Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE, RESOURCE2_NAME = RESOURCE2_VALUE, ... }'
