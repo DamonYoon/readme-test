@@ -40,6 +40,12 @@ paths:
               --header 'content-type: application/octet-stream: ' \
 
               --data '{}'
+          - code: asdfasdfa
+            language: shell
+            name: ''
+        samples-languages:
+          - cURL
+          - shell
       security:
         - authToken: []
       responses:
