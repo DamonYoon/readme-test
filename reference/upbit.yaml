@@ -91,6 +91,21 @@ paths:
                     $ref: '#/components/schemas/Accounts'
         '400':
           $ref: '#/components/responses/BadRequest'
+      x-readme:
+        explorer-enabled: false
+        samples-languages:
+          - shell
+          - python
+          - java
+          - ruby
+        code-samples:
+          - language: shell
+            name: CURL
+            code: |
+              curl --request get \
+                --url 'https://data.apiexample.com/api/example/batch_query/json?format=json' \
+                --header 'content-type: application/octet-stream: ' \
+                --data '{}'
 components:
   securitySchemes:
     authToken:
