@@ -6,3 +6,4 @@ api:
   operationId: accounts
 hidden: false
 ---
+<TutorialTile emoji="🦉" slug="recipe-test" title="Recipe Test" />
