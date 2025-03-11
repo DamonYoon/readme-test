@@ -30,10 +30,15 @@ paths:
           - language: cURL
             name: CURL
             install: brew install curl
-            code: |
-              curl --request POST \
-              --url 'https://data.apiexample.com/api/example/batch_query/json?format=json' \
+            code: >
+              curl --request get \
+
+              --url
+              'https://data.apiexample.com/api/example/batch_query/json?format=json'
+              \
+
               --header 'content-type: application/octet-stream: ' \
+
               --data '{}'
       security:
         - authToken: []
@@ -192,6 +197,6 @@ components:
                 type: string
             example:
               code: RESOURCE_NOT_FOUND
-              message: 'Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE, RESOURCE2_NAME = RESOURCE2_VALUE, ... }'
-x-readme:
-  explorer-enabled: false
+              message: >-
+                Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
+                RESOURCE2_NAME = RESOURCE2_VALUE, ... }
