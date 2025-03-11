@@ -17,6 +17,8 @@ servers:
 tags:
   - name: Accounts
     description: Example Accounts
+x-readme:
+  explorer-enabled: false
 paths:
   /accounts:
     get:
@@ -40,8 +42,6 @@ paths:
               --header 'content-type: application/octet-stream: ' \
 
               --data '{}'
-        samples-languages:
-          - cURL
       security:
         - authToken: []
       responses:
@@ -195,5 +195,3 @@ components:
               message: >-
                 Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
                 RESOURCE2_NAME = RESOURCE2_VALUE, ... }
-x-readme:
-  explorer-enabled: false
