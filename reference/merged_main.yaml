@@ -25,6 +25,19 @@ paths:
       summary: 자산 조회
       description: 사용자가 보유한 자산 리스트를 조회합니다.
       operationId: accounts
+      x-codeSamples:
+        - lang: cURL
+          label: CURL
+          source: >
+            curl --request POST \
+
+            --url
+            'https://data.apiexample.com/api/example/batch_query/json?format=json'
+            \
+
+            --header 'content-type: application/octet-stream: ' \
+
+            --data '{}'
       security:
         - authToken: []
       responses:
@@ -182,7 +195,9 @@ components:
                 type: string
             example:
               code: RESOURCE_NOT_FOUND
-              message: 'Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE, RESOURCE2_NAME = RESOURCE2_VALUE, ... }'
+              message: >-
+                Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
+                RESOURCE2_NAME = RESOURCE2_VALUE, ... }
 x-readme:
   explorer-enabled: false
   samples-languages:
