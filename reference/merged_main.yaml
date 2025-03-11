@@ -17,8 +17,6 @@ servers:
 tags:
   - name: Accounts
     description: Example Accounts
-x-readme:
-  explorer-enabled: false
 paths:
   /accounts:
     get:
@@ -33,15 +31,10 @@ paths:
             name: CURL
             install: brew install curl
             code: >
-              curl --request get \
-
-              --url
+              curl --request get \ --url
               'https://data.apiexample.com/api/example/batch_query/json?format=json'
-              \
-
-              --header 'content-type: application/octet-stream: ' \
-
-              --data '{}'
+              \ --header 'content-type: application/octet-stream: ' \ --data
+              '{}'
       security:
         - authToken: []
       responses:
