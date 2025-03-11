@@ -38,10 +38,6 @@ const generateAuth = (params) => {
 
 ```
 
-```json Response Example
-{ "success": true }
-```
-
 # Step 1
 
 <!-- javascript@1-30 -->
