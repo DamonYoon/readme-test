@@ -1,0 +1,52 @@
+type: object
+description: 마켓에 대한 정보
+properties:
+  id:
+    type: string
+    description: 마켓의 유일키
+  name:
+    type: string
+    description: 마켓 이름
+  order_types:
+    type: array
+    description: 지원 주문 방식 (Deprecated)
+    items:
+      type: string
+  ask_type:
+    type: array
+    description: 매도 주문 지원 방식
+    items:
+      type: string
+  bid_types:
+    type: array
+    description: 매수 주문 지원 방식
+    items:
+      type: string
+  order_sides:
+    type: array
+    description: 지원 주문 종류
+    items:
+      type: string
+  bid:
+    type: object
+    description: 매수 시 제약사항
+    properties: &ref_0
+      currency:
+        type: string
+        description: 화폐를 의미하는 영문 대문자 코드
+      price_unit:
+        type: string
+        description: 주문금액 단위
+      min_total:
+        type: number
+        description: 최소 매도/매수 금액
+  ask:
+    type: object
+    description: 매도 시 제약사항
+    properties: *ref_0
+  max_total:
+    type: string
+    description: 최대 매도/매수 금액
+  state:
+    type: string
+    description: 마켓 운영 상태

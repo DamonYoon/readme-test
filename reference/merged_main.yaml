@@ -192,3 +192,10 @@ components:
             example:
               code: RESOURCE_NOT_FOUND
               message: 'Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE, RESOURCE2_NAME = RESOURCE2_VALUE, ... }'
+x-readme:
+  explorer-enabled: false
+  samples-languages:
+    - shell
+    - python
+    - java
+    - ruby
