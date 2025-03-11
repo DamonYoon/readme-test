@@ -25,6 +25,21 @@ paths:
       summary: 자산 조회
       description: 사용자가 보유한 자산 리스트를 조회합니다.
       operationId: accounts
+      x-readme:
+        code-samples:
+          - language: cURL
+            name: CURL
+            install: brew install curl
+            code: >
+              curl --request get \
+
+              --url
+              'https://data.apiexample.com/api/example/batch_query/json?format=json'
+              \
+
+              --header 'content-type: application/octet-stream: ' \
+
+              --data '{}'
       security:
         - authToken: []
       responses:
@@ -33,7 +48,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Accounts'
+                type: string
+                description: test
         '400':
           $ref: '#/components/responses/BadRequest'
   /orders/chance:
@@ -66,14 +82,6 @@ paths:
                   ask_fee:
                     type: string
                     description: 매도 수수료 비율
-                  market:
-                    $ref: '#/components/schemas/Market'
-                  bid_account:
-                    description: 매수 시 사용하는 화폐의 계좌 상태
-                    $ref: '#/components/schemas/Accounts'
-                  ask_account:
-                    description: 매도 시 사용하는 화폐의 계좌 상태
-                    $ref: '#/components/schemas/Accounts'
         '400':
           $ref: '#/components/responses/BadRequest'
 components:
