@@ -26,7 +26,7 @@ paths:
       description: 사용자가 보유한 자산 리스트를 조회합니다.
       operationId: accounts
       x-readme:
-        codeSamples:
+        code-samples:
           - language: cURL
             name: CURL
             install: brew install curl
@@ -200,3 +200,10 @@ components:
               message: >-
                 Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
                 RESOURCE2_NAME = RESOURCE2_VALUE, ... }
+x-readme:
+  explorer-enabled: false
+  samples-languages:
+    - shell
+    - python
+    - java
+    - javascript
