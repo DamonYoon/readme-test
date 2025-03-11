@@ -202,8 +202,3 @@ components:
                 RESOURCE2_NAME = RESOURCE2_VALUE, ... }
 x-readme:
   explorer-enabled: false
-  samples-languages:
-    - shell
-    - python
-    - java
-    - javascript
