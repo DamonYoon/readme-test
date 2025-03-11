@@ -36,14 +36,15 @@ paths:
                 $ref: '#/components/schemas/Accounts'
         '400':
           $ref: '#/components/responses/BadRequest'
-      x-codeSamples:
-        - lang: cURL
-          label: CURL
-          source: |
-            curl --request get \
-              --url 'https://data.apiexample.com/api/example/batch_query/json?format=json' \
-              --header 'content-type: application/octet-stream: ' \
-              --data '{}'
+      x-readme:
+        code-samples:
+          - language: cURL
+            name: CURL
+            code: |
+              curl --request get \
+                --url 'https://data.apiexample.com/api/example/batch_query/json?format=json' \
+                --header 'content-type: application/octet-stream: ' \
+                --data '{}'
   /orders/chance:
     get:
       tags:
@@ -195,3 +196,15 @@ components:
                 RESOURCE2_NAME = RESOURCE2_VALUE, ... }
 x-readme:
   explorer-enabled: false
+  samples-languages:
+    - shell
+    - python
+    - java
+    - javascript
+  parameter-ordering:
+    - header
+    - path
+    - query
+    - cookie
+    - body
+    - form
