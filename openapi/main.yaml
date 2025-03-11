@@ -25,10 +25,6 @@ components:
       bearerFormat: JWT
       description: |
         입력한 파라미터에 맞는 JWT 입력
-x-readme: # Readme Extension 적는 부분
-  explorer-enabled: false # try it 버튼 활성(true)/비활성화(false)
-  samples-languages: ["shell", "python", "java", "ruby"] # sample code 언어 선택
-  # parameter-ordering: ["header", "path", "query", "cookie", "body", "form"] # 파라미터 순서 지정
 paths:
   "/accounts":
     $ref: ./paths/accounts.yaml

@@ -22,7 +22,10 @@ get:
             $ref: ../components/schemas/Accounts.yaml
     "400":
       $ref: ../components/responses/BadRequest.yaml
-  x-readme:
+  x-readme: # Readme Extension 적는 부분
+    explorer-enabled: false # try it 버튼 활성(true)/비활성화(false)
+    samples-languages: ["shell", "python", "java", "ruby"] # sample code 언어 선택
+    # parameter-ordering: ["header", "path", "query", "cookie", "body", "form"] # 파라미터 순서 지정
     code-samples:
       - language: cURL
         name: CURL
