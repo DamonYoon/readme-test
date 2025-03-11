@@ -44,7 +44,7 @@ paths:
           - java
           - ruby
         code-samples:
-          - language: cURL
+          - language: shell
             name: CURL
             code: |
               curl --request get \

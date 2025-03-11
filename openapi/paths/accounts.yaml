@@ -27,7 +27,7 @@ get:
     samples-languages: ["shell", "python", "java", "ruby"] # sample code 언어 선택
     # parameter-ordering: ["header", "path", "query", "cookie", "body", "form"] # 파라미터 순서 지정
     code-samples:
-      - language: cURL
+      - language: shell
         name: CURL
         code: |
           curl --request get \
