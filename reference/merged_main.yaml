@@ -85,6 +85,13 @@ paths:
                     $ref: '#/components/schemas/Accounts'
         '400':
           $ref: '#/components/responses/BadRequest'
+      x-readme:
+        code-samples:
+          - code: curl asdlfjasdklfj
+            language: shell
+            name: ''
+        samples-languages:
+          - shell
 components:
   securitySchemes:
     authToken:
@@ -191,7 +198,9 @@ components:
                 type: string
             example:
               code: RESOURCE_NOT_FOUND
-              message: 'Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE, RESOURCE2_NAME = RESOURCE2_VALUE, ... }'
+              message: >-
+                Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
+                RESOURCE2_NAME = RESOURCE2_VALUE, ... }
 x-readme:
   explorer-enabled: false
   samples-languages:
