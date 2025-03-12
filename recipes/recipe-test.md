@@ -1,5 +1,5 @@
 ---
-title: Recipe Test
+title: Generate AuthToken
 description: Recipe Description
 hidden: false
 recipe:
