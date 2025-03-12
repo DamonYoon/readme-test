@@ -6,4 +6,4 @@ api:
   operationId: accounts
 hidden: false
 ---
-<TutorialTile emoji="🦉" slug="recipe-test" title="Recipe Test" />
+<TutorialTile emoji="🦉" slug="recipe-test" title="Generate AuthToken" />
