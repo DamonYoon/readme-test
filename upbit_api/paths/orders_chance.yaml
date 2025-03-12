@@ -42,9 +42,9 @@ get:
     ["shell", "python", "java", "ruby"] # sample code 언어 선택
     # parameter-ordering: ["header", "path", "query", "cookie", "body", "form"] # 파라미터 순서 지정
   x-code-samples:
-    - label: CURL
-      lang: shell
-      source: |
+    - name: CURL
+      language: shell
+      code: |
         curl --request get \
           --url 'https://data.apiexample.com/api/example/batch_query/json?format=json' \
           --header 'content-type: application/octet-stream: ' \
