@@ -1,0 +1,436 @@
+openapi: 3.1.0
+info:
+  title: Analytics API
+  version: 2.0.0
+servers:
+  - url: https://web3.nodit.io/v1/{protocol}/{network}/analytics
+    variables:
+      protocol:
+        default: ethereum
+        enum:
+          - ethereum
+          - tron
+          - bitcoin
+      network:
+        default: mainnet
+        enum:
+          - mainnet
+paths:
+  /contract/getEventHistogramByContract:
+    post:
+      servers:
+        - url: https://web3.nodit.io/v1/{protocol}/{network}/analytics
+          variables:
+            protocol:
+              default: ethereum
+              enum:
+                - ethereum
+                - tron
+                - bitcoin
+            network:
+              default: mainnet
+              enum:
+                - mainnet
+      security:
+        - X-API-KEY: []
+      tags:
+        - Contract API
+      summary: Get Event Histogram By Contract
+      operationId: getEventHistogramByContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - contractAddress
+                - eventSignatures
+                - interval
+                - from
+                - to
+                - order
+              properties:
+                contractAddress:
+                  $ref: '#/components/schemas/contractAddress'
+                eventSignatures:
+                  $ref: '#/components/schemas/eventSignatures'
+                interval:
+                  $ref: '#/components/schemas/interval'
+                from:
+                  $ref: '#/components/schemas/from'
+                to:
+                  $ref: '#/components/schemas/to'
+      responses:
+        '200':
+          description: The event histogram for the contract.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/HistogramMetadata'
+                  - type: object
+                    properties:
+                      histogram:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            period:
+                              $ref: '#/components/schemas/Period'
+                            items:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/EventHistogram'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  /contract/getFunctionCallHistogramByContract:
+    post:
+      servers:
+        - url: https://web3.nodit.io/v1/{protocol}/{network}/analytics
+          variables:
+            protocol:
+              default: ethereum
+              enum:
+                - ethereum
+                - tron
+                - bitcoin
+            network:
+              default: mainnet
+              enum:
+                - mainnet
+      security:
+        - X-API-KEY: []
+      tags:
+        - Contract API
+      summary: Get Function Call Histogram By Contract
+      operationId: getFunctionCallHistogramByContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - contractAddress
+                - functionSelectors
+                - interval
+                - from
+                - to
+                - order
+              properties:
+                contractAddress:
+                  $ref: '#/components/schemas/contractAddress'
+                functionSelectors:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  items:
+                    $ref: '#/components/schemas/functionSelector'
+                from:
+                  $ref: '#/components/schemas/from'
+                to:
+                  $ref: '#/components/schemas/to'
+      responses:
+        '200':
+          description: The event histogram for the contract.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/HistogramMetadata'
+                  - type: object
+                    properties:
+                      histogram:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            period:
+                              $ref: '#/components/schemas/Period'
+                            items:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/FuntionCallHistogram'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+components:
+  securitySchemes:
+    X-API-KEY:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+      x-default: nodit-demo
+      description: >-
+        The default value, `nodit-demo`, is only for use in the developer
+        documentation. For real applications or services, use the API key
+        obtained from the Nodit console.
+  schemas:
+    contractAddress:
+      type: string
+      description: The address of the contract to query the histogram for.
+      example: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+    eventSignatures:
+      type: array
+      minItems: 1
+      maxItems: 10
+      items:
+        type: string
+        description: >-
+          The Event signature to query the histogram for. A minimum of one event
+          signature is required, and up to ten event signatures can be
+          specified.
+        example: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+    interval:
+      type: string
+      description: |
+        The time interval between data points in the histogram.
+      enum:
+        - day
+        - month
+        - year
+    from:
+      type: string
+      description: >
+        The start date of the query period (inclusive). Must be formatted
+        according to the interval value:
+
+
+        - **year**: YYYY
+
+        - **month**: YYYY-MM or YYYYMM
+
+        - **day**: YYYY-MM-DD or YYYYMMDD
+
+
+        **Period Limitations**: The length of the period that can be specified
+        between `from` and `to` is limited as follows:
+
+        - **day**: Maximum 1 year (365 days, 366 days in leap years)
+
+        - **month**: Maximum 5 years (60 months)
+
+        - **year**: Maximum 10 years
+      example: '2025-01-01'
+    to:
+      type: string
+      description: >
+        The end date of the query period (inclusive). Must be formatted
+        according to the interval value:
+
+
+        - **year**: YYYY
+
+        - **month**: YYYY-MM or YYYYMM
+
+        - **day**: YYYY-MM-DD or YYYYMMDD
+
+
+        **Period Limitations**: The length of the period that can be specified
+        between `from` and `to` is limited as follows:
+
+        - **day**: Maximum 1 year (365 days, 366 days in leap years)
+
+        - **month**: Maximum 5 years (60 months)
+
+        - **year**: Maximum 10 years
+      example: '2025-01-31'
+    Period:
+      type: string
+      description: The period of the histogram.
+      example: 2025-07
+    HistogramMetadata:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of data points in the histogram.
+          example: 12
+        interval:
+          type: string
+          description: The time interval between data points in the histogram.
+          enum:
+            - day
+            - month
+            - year
+          example: month
+        from:
+          type: string
+          description: The start date of the query period (inclusive).
+          example: '2025-01-01'
+        to:
+          type: string
+          description: The end date of the query period (inclusive).
+          example: '2025-01-31'
+        order:
+          type: string
+          description: The order of the histogram.
+          enum:
+            - asc
+            - desc
+          example: desc
+        histogram:
+          type: array
+          items:
+            type: object
+            properties:
+              period:
+                $ref: '#/components/schemas/Period'
+              items:
+                type: array
+                items:
+                  type: object
+        lastUpdated:
+          type: string
+          description: The timestamp of the last update of the data.
+          example: '2025-07-01T00:00:00Z'
+    EventHistogram:
+      type: object
+      required:
+        - eventSignature
+        - eventName
+        - eventCount
+        - transctionCount
+      properties:
+        eventSignature:
+          type: string
+          description: The event signature of the event.
+          example: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+        eventName:
+          type: string
+          description: The name of the event.
+          example: Transfer(address,address,uint256)
+        eventCount:
+          type: integer
+          description: The number of events in the period.
+          example: 100
+        transctionCount:
+          type: integer
+          description: The number of transactions in the period.
+          example: 100
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: >-
+            Returns a code that identifies the situation where the error
+            occurred.
+        message:
+          type: string
+          description: Returns a detailed message explaining the cause of the error.
+      required:
+        - code
+        - message
+    functionSelector:
+      type: string
+      description: The function selector of the function.
+      example: '0xa9059cbb'
+    FuntionCallHistogram:
+      type: object
+      required:
+        - functionSelector
+        - candidateSignatures
+        - functionCallCount
+        - transactionCount
+        - uniqueAddressCount
+      properties:
+        functionSelector:
+          type: string
+          description: The function selector of the function.
+          example: '0xa9059cbb'
+        candidateSignatures:
+          type: array
+          items:
+            type: string
+            description: The candidate signatures of the function.
+            example:
+              - transfer(address,uint256)
+              - many_msg_babbage(bytes1)
+              - transfer(bytes4[9],bytes5[6],int48[11])
+              - func_2093253501(bytes)
+              - join_tg_invmru_haha_fd06787(address,bool)
+              - workMyDirefulOwner(uint256,uint256)
+        functionCallCount:
+          type: integer
+          description: The number of function calls in the period.
+          example: 100
+        transactionCount:
+          type: integer
+          description: The number of transactions in the period.
+          example: 100
+        uniqueAddressCount:
+          type: integer
+          description: The number of unique addresses in the period.
+          example: 100
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+            example:
+              code: INVALID_PARAMETER
+              message: >-
+                Invalid parameter: { PARAMETER1_NAME = PARAMETER1_VALUE,
+                PARAMETER2_NAME = PARAMETER2_VALUE, ... }
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            example:
+              code: AUTHENTICATION_FAILED
+              message: Authentication failed
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            example:
+              code: PERMISSION_DENIED
+              message: Permission denied
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            example:
+              code: RESOURCE_NOT_FOUND
+              message: >-
+                Resource not found: { RESOURCE1_NAME = RESOURCE1_VALUE,
+                RESOURCE2_NAME = RESOURCE2_VALUE, ... }
+    '429':
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            example:
+              code: TOO_MANY_REQUESTS
+              message: Too many requests
