@@ -1,0 +1,11 @@
+- aptos_gettransactions
+- aptos_submittransaction
+- aptos_gettransactionbyhash
+- aptos_gettransactionbyversion
+- aptos_getaccounttransactions
+- aptos_gettransactionsummaries
+- aptos_submitbatchtransactions
+- aptos_simulatetransaction
+- aptos_encodesubmission
+- aptos_estimategasprice
+- aptos_waitfortransactionbyhash

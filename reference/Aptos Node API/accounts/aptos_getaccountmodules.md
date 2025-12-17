@@ -1,0 +1,25 @@
+---
+title: Get account modules
+excerpt: >
+  계정 주소에 대한 모듈을 반환합니다. 트랜잭션의 원장 버전을 지정할 수 있으며 원장의 버전이 지정되지 않은 경우, 최신 원장의 버전을
+  가져옵니다.
+
+  Aptos 노드는 구성 가능한 기간에 따라 계정 상태 기록을 정리(pruning)합니다. 요청된 원장 버전이 정리된 경우, 서버는 410
+  상태 코드로 응답합니다.
+
+
+  > ⚠️ 일부 API 호출 관련 안내
+
+  > 
+
+  > Aptos 노드 클라이언트의 최신 버전에서 Legacy Indexer가 제외됨에 따라, 일부 API 호출 시 Indexer 관련 오류가
+  발생할 수 있습니다. 
+
+  > 현재 해당 기능의 복구 또는 대체 API 제공 방안을 검토 중이며, 관련 조치가 완료되는 대로 업데이트를 제공하겠습니다.
+
+  > 이용에 불편을 드려 죄송합니다.
+api:
+  file: web3-data-api.yaml
+  operationId: aptos_getAccountModules
+hidden: false
+---
