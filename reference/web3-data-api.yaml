@@ -2562,6 +2562,9 @@ paths:
                     toDate:
                       $ref: '#/components/schemas/AptosToDate'
                 - $ref: '#/components/schemas/Pagination'
+                  example:
+                    linkedAssetType: >-
+                      0x000000000000000000000000000000000000000000000000000000000000000a
       responses:
         '200':
           description: Successful Response
