@@ -2350,6 +2350,9 @@ paths:
                           $ref: "#/components/schemas/AptosLinkedAssetType"
                           default: "0x000000000000000000000000000000000000000000000000000000000000000a"
                 - type: object
+                  required:
+                    - fromDate
+                    - toDate
                   properties:
                     fromBlock:
                       $ref: "#/components/schemas/AptosFromBlock"
