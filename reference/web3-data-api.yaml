@@ -2544,6 +2544,8 @@ paths:
                       properties:
                         assetType:
                           $ref: '#/components/schemas/AptosAssetType'
+                      default:
+                        assetType: 0x1::aptos_coin::AptosCoin
                     - title: With linkedAssetType
                       type: object
                       required:
@@ -2551,6 +2553,9 @@ paths:
                       properties:
                         linkedAssetType:
                           $ref: '#/components/schemas/AptosLinkedAssetType'
+                      default:
+                        linkedAssetType: >-
+                          0x000000000000000000000000000000000000000000000000000000000000000a
                 - type: object
                   properties:
                     fromBlock:
@@ -2562,9 +2567,6 @@ paths:
                     toDate:
                       $ref: '#/components/schemas/AptosToDate'
                 - $ref: '#/components/schemas/Pagination'
-                  example:
-                    linkedAssetType: >-
-                      0x000000000000000000000000000000000000000000000000000000000000000a
       responses:
         '200':
           description: Successful Response
