@@ -2357,8 +2357,10 @@ paths:
                       $ref: "#/components/schemas/AptosToBlock"
                     fromDate:
                       $ref: "#/components/schemas/AptosFromDate"
+                      default: "2025-08-01T00:00:00+00:00"
                     toDate:
                       $ref: "#/components/schemas/AptosToDate"
+                      default: "2025-12-01T00:00:00+00:00"
                 - $ref: "#/components/schemas/Pagination"
       responses:
         "200":
