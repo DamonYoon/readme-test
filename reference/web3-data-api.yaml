@@ -2546,6 +2546,8 @@ paths:
                           $ref: '#/components/schemas/AptosAssetType'
                       default:
                         assetType: 0x1::aptos_coin::AptosCoin
+                        fromDate: '2025-01-01T00:00:00+00:00'
+                        toDate: '2025-04-01T00:00:00+00:00'
                     - title: With linkedAssetType
                       type: object
                       required:
@@ -2556,6 +2558,8 @@ paths:
                       default:
                         linkedAssetType: >-
                           0x000000000000000000000000000000000000000000000000000000000000000a
+                        fromDate: '2025-01-01T00:00:00+00:00'
+                        toDate: '2025-04-01T00:00:00+00:00'
                 - type: object
                   properties:
                     fromBlock:
@@ -2566,9 +2570,6 @@ paths:
                       $ref: '#/components/schemas/AptosFromDate'
                     toDate:
                       $ref: '#/components/schemas/AptosToDate'
-                  default:
-                    fromDate: '2025-01-01T00:00:00+00:00'
-                    toDate: '2025-04-01T00:00:00+00:00'
                 - $ref: '#/components/schemas/Pagination'
       responses:
         '200':
