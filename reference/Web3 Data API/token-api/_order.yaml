@@ -2,3 +2,6 @@
 - gettokenaccountsbyassettype
 - gettokenbalancechangesbyaccount
 - gettokenbalancechangesbyassettype
+- gettokenbalancechangeswithinrange
+- gettokencontractmetadatabycontracts
+- gettokenholdersbycontract
