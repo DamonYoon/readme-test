@@ -6,3 +6,5 @@
 - gettokencontractmetadatabycontracts
 - gettokenholdersbycontract
 - gettokenmetadatabyassettypes
+- gettokenpairbyassettype
+- gettokenpricesbycontracts
