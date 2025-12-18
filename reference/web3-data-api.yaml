@@ -15,7 +15,7 @@ paths:
       tags:
         - NFT API
       description: |
-        특정 NFT 컨트랙트의 메타데이터를 조회합니다. 컨트랙트 메타데이터에는 컨트랙트의 이름, 심볼, 주소, 토큰 수량 등이 포함됩니다.
+        특정 NFT 컨트랙트의 메타데이터를 조회합니다. 컨트랙트 메타데이터에는 컨트랙트의 이름, 심볼, 주소, 토큰 수량 등이 포함되며, 최대 1000개의 컨트랙트를 조회할 수 있습니다.
       summary: Get NFT Contract Metadata by Contracts
       operationId: getNftContractMetadataByContracts
       parameters:
@@ -2320,7 +2320,7 @@ paths:
       tags:
         - Token API
       description: |
-        특정 Asset Type을 가진 토큰의 목록을 조회합니다. 조회 결과는 Owner 주소 기준이 아닌 Object 주소를 기준으로 제공됩니다.
+        특정 Asset Type을 가진 토큰의 잔액 변화 내역을 조회합니다.
       summary: Get Token Balance Changes By Asset Type
       operationId: getTokenBalanceChangesByAssetType
       parameters:
@@ -2340,7 +2340,8 @@ paths:
                       properties:
                         assetType:
                           $ref: "#/components/schemas/AptosAssetType"
-                          default: 0x1::aptos_coin::AptosCoin
+                      default:
+                        assetType: 0x1::aptos_coin::AptosCoin
                     - title: With linkedAssetType
                       type: object
                       required:
@@ -2348,7 +2349,8 @@ paths:
                       properties:
                         linkedAssetType:
                           $ref: "#/components/schemas/AptosLinkedAssetType"
-                          default: "0x000000000000000000000000000000000000000000000000000000000000000a"
+                      default:
+                        linkedAssetType: "0x000000000000000000000000000000000000000000000000000000000000000a"
                 - type: object
                   properties:
                     fromBlock:
@@ -2357,10 +2359,11 @@ paths:
                       $ref: "#/components/schemas/AptosToBlock"
                     fromDate:
                       $ref: "#/components/schemas/AptosFromDate"
-                      default: "2025-08-01T00:00:00+00:00"
                     toDate:
                       $ref: "#/components/schemas/AptosToDate"
-                      default: "2025-12-01T00:00:00+00:00"
+                  default:
+                    fromDate: "2025-01-01T00:00:00+00:00"
+                    toDate: "2025-04-01T00:00:00+00:00"
                 - $ref: "#/components/schemas/Pagination"
       responses:
         "200":
@@ -2409,6 +2412,309 @@ paths:
                     blockHeight: 389662497
                     blockTimestamp: 1753172463548
                     transactionHash: "0xab24ee038fa7e6ea6f37d6f4c8a062720de23d6424d5a7264d31ffa8c9e20714"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+  /{chain}/{network}/token/getTokenBalanceChangesWithinRange:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Token API
+      description: |
+        특정 기간 혹은 블록 범위 내의 자산 변화 내역을 조회합니다.
+      summary: Get Token Balance Changes Within Range
+      operationId: getTokenBalanceChangesWithinRange
+      parameters:
+        - $ref: "#/components/parameters/AptosChain"
+        - $ref: "#/components/parameters/AptosNetwork"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    fromBlock:
+                      $ref: "#/components/schemas/AptosFromBlock"
+                    toBlock:
+                      $ref: "#/components/schemas/AptosToBlock"
+                    fromDate:
+                      $ref: "#/components/schemas/AptosFromDate"
+                    toDate:
+                      $ref: "#/components/schemas/AptosToDate"
+                  default:
+                    fromDate: "2025-01-01T00:00:00+00:00"
+                    toDate: "2025-04-01T00:00:00+00:00"
+                - $ref: "#/components/schemas/Pagination"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResponse"
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/AptosTokenBalanceChangeConditional"
+              example:
+                rpp: 2
+                page: 1
+                count: 5212591288
+                items:
+                  - eventIndex: 12
+                    subEventIndex: 0
+                    accountAddress: "0x0847702922d69e8c93b2b48d6fbbcb5a5250b99d44844d878cad997007f3aa70"
+                    assetType: 0x1::aptos_coin::AptosCoin
+                    changeValue: "-5200"
+                    linkedAssetType: "0x000000000000000000000000000000000000000000000000000000000000000a"
+                    tokenStandard: v1
+                    transferType: gas_fee
+                    eventType: 0x1::transaction_fee::FeeStatement
+                    transactionVersion: 3102744848
+                    blockHeight: 389665638
+                    blockTimestamp: 1753172853685
+                    transactionHash: "0x1a17e2bdae29909770ff4b68e8f431ef40c5764011ff75149e4fa8a614011a28"
+                  - eventIndex: 8
+                    subEventIndex: 0
+                    accountAddress: "0x0847702922d69e8c93b2b48d6fbbcb5a5250b99d44844d878cad997007f3aa70"
+                    assetType: "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b"
+                    changeValue: "-197"
+                    linkedAssetType: "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b"
+                    tokenStandard: v2
+                    transferType: withdraw
+                    eventType: 0x1::fungible_asset::Withdraw
+                    transactionVersion: 3102744848
+                    blockHeight: 389665638
+                    blockTimestamp: 1753172853685
+                    transactionHash: "0x1a17e2bdae29909770ff4b68e8f431ef40c5764011ff75149e4fa8a614011a28"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+  /{chain}/{network}/token/getTokenContractMetadataByContracts:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Token API
+      description: |
+        특정 토큰 컨트랙트의 메타데이터를 조회합니다. 다수의 컨트랙트를 조회할 수 있으며, 최대 1000개의 컨트랙트를 조회할 수 있습니다.
+      summary: Get Token Contract Metadata by Contracts
+      operationId: getTokenContractMetadataByContracts
+      parameters:
+        - $ref: "#/components/parameters/EvmTronChain"
+        - $ref: "#/components/parameters/EvmTronNetwork"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - title: EVM (Ethereum, Optimism, ...)
+                  allOf:
+                    - type: object
+                      required:
+                        - contractAddresses
+                      properties:
+                        contractAddresses:
+                          $ref: "#/components/schemas/EvmTokenContractAddresses"
+                - title: Tron
+                  type: object
+                  required:
+                    - contractAddresses
+                  properties:
+                    contractAddresses:
+                      $ref: "#/components/schemas/TronTokenContractAddresses"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - title: EVM (Ethereum, Optimism, ...)
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/EvmContractMeta"
+                        - $ref: "#/components/schemas/EvmTokenMeta"
+                  - title: Tron
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/TronContractMeta"
+                        - $ref: "#/components/schemas/TronTokenMeta"
+              example:
+                - address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+                  deployedTransactionHash: "0x2f1c5c2b44f771e942a8506148e256f94f1a464babc938ae0690c6e34cd79190"
+                  deployedAt: "2017-11-28T00:41:21.000Z"
+                  deployerAddress: "0x36928500Bc1dCd7af6a2B4008875CC336b927D57"
+                  logoUrl: https://cdn.luniverse.io/img/crypto-currencies/ethereum/mainnet/0xdac17f958d2ee523a2206206994597c13d831ec7/64x64.png
+                  type: ERC20
+                  name: Tether USD
+                  symbol: USDT
+                  totalSupply: "44005847706828943"
+                  decimals: 18
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+  /{chain}/{network}/token/getTokenHoldersByContract:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Token API
+      description: |
+        특정 토큰 컨트랙트의 홀더 리스트를 조회합니다. 홀더 리스트에는 홀더의 주소와 홀더가 보유한 토큰의 수량이 포함됩니다.
+      summary: Get Token Holders by Contract
+      operationId: getTokenHoldersByContract
+      parameters:
+        - $ref: "#/components/parameters/EvmChain"
+        - $ref: "#/components/parameters/EvmNetwork"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - oneOf:
+                    - title: EVM (Ethereum, Optimism, ...)
+                      type: object
+                      required:
+                        - contractAddress
+                      properties:
+                        contractAddress:
+                          $ref: "#/components/schemas/EvmTokenContractAddress"
+                      default:
+                        contractAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+                    - title: Tron
+                      type: object
+                      required:
+                        - contractAddress
+                      properties:
+                        contractAddress:
+                          $ref: "#/components/schemas/TronTokenContractAddress"
+                      default:
+                        contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResponse"
+                  - oneOf:
+                      - title: EVM (Ethereum, Optimism, ...)
+                        type: object
+                        required:
+                          - items
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/EvmBalanceWithLastTransferredAt"
+                      - title: Tron
+                        type: object
+                        required:
+                          - items
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/TronBalance"
+              example:
+                rpp: 20
+                cursor: eyJ2YWx1ZSI6IjUwMDAwMDAxMTAwMDAwMCIsInBrLmFkZHJlc3MiOiIweDY5YTcyMmYwYjVkYTNhZjAyYjRhMjA1ZDZmMGMyODVmNGVkOGYzOTYifQ==
+                items:
+                  - balance: "26975103842768374"
+                    ownerAddress: "0xF977814e90dA44bFA03b6295A0616a897441aceC"
+                    lastTransferredAt: "2025-12-05T20:19:47.000Z"
+                  - balance: "8984997789442122"
+                    ownerAddress: "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503"
+                    lastTransferredAt: "2025-10-13T13:24:59.000Z"
+                  - balance: "4241581591770872"
+                    ownerAddress: "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee"
+                    lastTransferredAt: "2025-12-17T09:48:59.000Z"
+                  - balance: "2226003727380451"
+                    ownerAddress: "0x23878914EFE38d27C4D67Ab83ed1b93A74D4086a"
+                    lastTransferredAt: "2025-12-17T09:50:11.000Z"
+                  - balance: "1952848333854256"
+                    ownerAddress: "0x835678a611B28684005a5e2233695fB6cbbB0007"
+                    lastTransferredAt: "2025-12-16T08:53:35.000Z"
+                  - balance: "1478053428034663"
+                    ownerAddress: "0xB0A27099582833c0Cb8C7A0565759fF145113d64"
+                    lastTransferredAt: "2025-12-17T03:11:59.000Z"
+                  - balance: "1351664707826991"
+                    ownerAddress: "0xccDCFC4598F539408fc0393B42905c1e0D24A91E"
+                    lastTransferredAt: "2025-12-17T03:25:35.000Z"
+                  - balance: "1149272921008092"
+                    ownerAddress: "0x5754284f345afc66a98fbB0a0Afe71e0F007B949"
+                    lastTransferredAt: "2025-12-17T09:37:23.000Z"
+                  - balance: "1070701603414147"
+                    ownerAddress: "0x28C6c06298d514Db089934071355E5743bf21d60"
+                    lastTransferredAt: "2025-12-17T09:51:23.000Z"
+                  - balance: "911342593109775"
+                    ownerAddress: "0x5a52E96BAcdaBb82fd05763E25335261B270Efcb"
+                    lastTransferredAt: "2025-12-16T08:47:47.000Z"
+                  - balance: "882639745602627"
+                    ownerAddress: "0xa7C0D36c4698981FAb42a7d8c783674c6Fe2592d"
+                    lastTransferredAt: "2025-12-12T15:07:23.000Z"
+                  - balance: "600000027792705"
+                    ownerAddress: "0x6Fb624B48d9299674022a23d92515e76Ba880113"
+                    lastTransferredAt: "2024-12-19T08:33:23.000Z"
+                  - balance: "600000022292256"
+                    ownerAddress: "0xf59869753f41Db720127Ceb8DbB8afAF89030De4"
+                    lastTransferredAt: "2025-09-07T15:58:59.000Z"
+                  - balance: "600000002000000"
+                    ownerAddress: "0xc708A1c712bA26DC618f972ad7A187F76C8596Fd"
+                    lastTransferredAt: "2024-12-19T08:33:23.000Z"
+                  - balance: "580088526627472"
+                    ownerAddress: "0x98ADeF6F2ac8572ec48965509d69A8Dd5E8BbA9D"
+                    lastTransferredAt: "2025-12-17T06:36:47.000Z"
+                  - balance: "553969276770581"
+                    ownerAddress: "0x18E296053CbDF986196903e889b7DcA7A73882F6"
+                    lastTransferredAt: "2025-12-17T09:51:35.000Z"
+                  - balance: "535194402450000"
+                    ownerAddress: "0x611f7bF868a6212f871e89F7e44684045DdFB09d"
+                    lastTransferredAt: "2025-11-22T02:41:11.000Z"
+                  - balance: "500000101010000"
+                    ownerAddress: "0xc5451b523d5FFfe1351337a221688a62806ad91a"
+                    lastTransferredAt: "2024-05-06T08:45:35.000Z"
+                  - balance: "500000014345000"
+                    ownerAddress: "0x42436286A9c8d63AAfC2eEbBCA193064d68068f2"
+                    lastTransferredAt: "2025-08-18T09:41:11.000Z"
+                  - balance: "500000011000000"
+                    ownerAddress: "0x69a722f0B5Da3aF02b4a205D6F0c285F4ed8F396"
+                    lastTransferredAt: "2024-05-17T11:41:11.000Z"
         "400":
           $ref: "#/components/responses/400"
         "401":
@@ -2979,12 +3285,11 @@ components:
               type: string
               description: |
                 함수의 입력 데이터를 나타내는 필드입니다. 0x로 시작하는 16진수 문자열 형태로 제공됩니다.
-    EvmBalanceWithLastTransferredAt:
+    EvmBalance:
       type: object
       required:
         - ownerAddress
         - balance
-        - lastTransferredAt
       properties:
         ownerAddress:
           $ref: "#/components/schemas/EvmAccountAddress"
@@ -2993,11 +3298,18 @@ components:
           description: |
             잔고를 나타내는 필드입니다.
           pattern: ^[0-9]+$
-        lastTransferredAt:
-          type: string
-          description: |
-            해당 토큰 또는 NFT가 소유자에게 마지막으로 전송된 시간을 ISO 8601 형식으로 나타내는 필드입니다. 표준 토큰 규격(ERC20, ERC721, ERC1155)과 동일한 Transfer 이벤트로 전송된 경우만 반영되며, 비표준 이벤트로 인해 전송된 경우는 반영되지 않을 수 있습니다.
-          pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?(?:Z|[+-][0-9]{2}:[0-9]{2})$
+    EvmBalanceWithLastTransferredAt:
+      allOf:
+        - $ref: "#/components/schemas/EvmBalance"
+        - type: object
+          required:
+            - lastTransferredAt
+          properties:
+            lastTransferredAt:
+              type: string
+              description: |
+                해당 토큰 또는 NFT가 소유자에게 마지막으로 전송된 시간을 ISO 8601 형식으로 나타내는 필드입니다. 표준 토큰 규격(ERC20, ERC721, ERC1155)과 동일한 Transfer 이벤트로 전송된 경우만 반영되며, 비표준 이벤트로 인해 전송된 경우는 반영되지 않을 수 있습니다.
+              pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?(?:Z|[+-][0-9]{2}:[0-9]{2})$
     EvmKeyword:
       type: string
       description: |
@@ -3423,6 +3735,119 @@ components:
                 - Payment
                 - PaymentChannelClaim
         - $ref: "#/components/schemas/XrplTokenBalanceChangeRequired"
+    EvmTokenContractAddresses:
+      type: array
+      maximum: 1000
+      description: |
+        조회하고자 하는 토큰 컨트랙트 주소의 배열을 지정하는 파라미터입니다. 최대 1000개까지 지정할 수 있습니다.
+      items:
+        $ref: "#/components/schemas/EvmTokenContractAddress"
+    TronTokenContractAddresses:
+      type: array
+      maximum: 1000
+      description: |
+        조회하고자 하는 토큰 컨트랙트 주소의 배열을 지정하는 파라미터입니다. 최대 1000개까지 지정할 수 있습니다.
+      items:
+        $ref: "#/components/schemas/TronTokenContractAddress"
+    EvmTokenMeta:
+      type: object
+      required:
+        - name
+        - symbol
+        - totalSupply
+        - decimals
+      properties:
+        name:
+          type: string
+          description: |
+            컨트랙트의 이름을 나타내는 필드입니다. 표준을 따르지 않거나, 컨트랙트 생성 단계에서 name을 입력하지 않은 경우 빈 문자열을 반환합니다.
+        symbol:
+          type: string
+          description: |
+            컨트랙트의 심볼을 나타내는 필드입니다. 표준을 따르지 않거나, 컨트랙트 생성 단계에서 symbol을 입력하지 않은 경우 빈 문자열을 반환합니다.
+        totalSupply:
+          type: string
+          description: |
+            컨트랙트의 총 공급량을 나타내는 필드입니다. 이 값은 토큰의 총 발행량을 의미하며, 10진수 문자열 형태로 제공됩니다.
+        decimals:
+          type: integer
+          description: |
+            컨트랙트의 소수점 자리수를 나타내는 필드입니다.
+    TronContractMeta:
+      type: object
+      required:
+        - address
+        - deployedTransactionHash
+        - deployedAt
+        - deployerAddress
+        - logoUrl
+        - type
+      properties:
+        address:
+          type: string
+          description: |
+            컨트랙트의 주소를 나타내는 필드입니다.
+        deployedTransactionHash:
+          type: string
+          description: |
+            컨트랙트가 배포된 트랜잭션의 해시를 나타내는 필드입니다.
+        deployedAt:
+          type: string
+          description: |
+            컨트랙트가 배포된 시간을 나타내는 필드입니다.
+        deployerAddress:
+          type: string
+          description: |
+            컨트랙트를 배포한 주소를 나타내는 필드입니다.
+        logoUrl:
+          type:
+            - string
+            - "null"
+          description: |
+            컨트랙트의 로고 URL을 나타내는 필드입니다.
+            <strong style='color: red;'>*</strong> 모든 컨트랙트의 로고 이미지가 제공되는 것은 아닙니다. 컨트랙트 로고가 없는 경우, 이 필드는 null로 제공됩니다.
+        type:
+          type: string
+          description: |
+            컨트랙트의 타입을 나타내는 필드입니다.
+            <strong style='color: red;'>*</strong> 컨트랙트 타입은 표준 규격의 이름이 표기됩니다. (e.g., ERC721, ERC1155, ERC20, ERC721, ERC1155, ERC20)
+    TronTokenMeta:
+      type: object
+      required:
+        - name
+        - symbol
+        - totalSupply
+        - decimals
+      properties:
+        name:
+          type: string
+          description: |
+            컨트랙트의 이름을 나타내는 필드입니다. 표준을 따르지 않거나, 컨트랙트 생성 단계에서 name을 입력하지 않은 경우 빈 문자열을 반환합니다.
+        symbol:
+          type: string
+          description: |
+            컨트랙트의 심볼을 나타내는 필드입니다. 표준을 따르지 않거나, 컨트랙트 생성 단계에서 symbol을 입력하지 않은 경우 빈 문자열을 반환합니다.
+        totalSupply:
+          type: string
+          description: |
+            컨트랙트의 총 공급량을 나타내는 필드입니다. 이 값은 토큰의 총 발행량을 의미하며, 10진수 문자열 형태로 제공됩니다.
+        decimals:
+          type: integer
+          description: |
+            컨트랙트의 소수점 자리수를 나타내는 필드입니다.
+    TronBalance:
+      type: object
+      required:
+        - ownerAddress
+        - balance
+      properties:
+        ownerAddress:
+          $ref: "#/components/schemas/TronAccountAddress"
+        balance:
+          type: string
+          description: |
+            잔고를 나타내는 필드입니다.
+          pattern: ^[0-9]+$
   responses:
     "400":
       description: Bad Request
