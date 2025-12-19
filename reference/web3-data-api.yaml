@@ -4261,14 +4261,6 @@ paths:
                       $ref: '#/components/schemas/XrplCurrencyParameter'
                     issuer:
                       $ref: '#/components/schemas/XrplIssuerParameter'
-                    fromLedger:
-                      $ref: '#/components/schemas/XrplFromLedgerParameter'
-                    toLedger:
-                      $ref: '#/components/schemas/XrplToLedgerParameter'
-                    fromDate:
-                      $ref: '#/components/schemas/XrplFromDateParameter'
-                    toDate:
-                      $ref: '#/components/schemas/XrplToDateParameter'
                 - oneOf:
                     - title: Ledger Range
                       type: object
