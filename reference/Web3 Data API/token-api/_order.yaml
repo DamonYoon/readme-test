@@ -11,3 +11,5 @@
 - gettokentransfersbyaccount
 - gettokentransfersbycontract
 - gettokentransfersbycurrencyandissuer
+- gettokensownedbyaccount
+- gettokentransferswithinrange
