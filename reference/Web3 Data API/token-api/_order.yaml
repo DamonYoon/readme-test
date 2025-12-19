@@ -8,3 +8,4 @@
 - gettokenmetadatabyassettypes
 - gettokenpairbyassettype
 - gettokenpricesbycontracts
+- gettokentransfersbyaccount
