@@ -4026,6 +4026,13 @@ paths:
                         withFunction:
                           $ref: '#/components/schemas/WithFunctionParameter'
                     - $ref: '#/components/schemas/PaginationParameter'
+                  default:
+                    contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+                    fromDate: '2025-05-01T00:00:00+00:00'
+                    toDate: '2025-07-01T00:00:00+00:00'
+                    withZeroValue: true
+                    withFunction: true
+                    withContract: true
                 - title: Tron
                   allOf:
                     - type: object
@@ -4046,6 +4053,13 @@ paths:
                         withZeroValue:
                           $ref: '#/components/schemas/WithZeroValueParameter'
                     - $ref: '#/components/schemas/PaginationParameter'
+                  default:
+                    contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+                    fromDate: '2025-05-01T00:00:00+00:00'
+                    toDate: '2025-07-01T00:00:00+00:00'
+                    withZeroValue: true
+                    withFunction: true
+                    withContract: true
       responses:
         '200':
           description: Successful Response
