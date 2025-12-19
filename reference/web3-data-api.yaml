@@ -4261,21 +4261,14 @@ paths:
                       $ref: '#/components/schemas/XrplCurrencyParameter'
                     issuer:
                       $ref: '#/components/schemas/XrplIssuerParameter'
-                - oneOf:
-                    - title: Ledger Range
-                      type: object
-                      properties:
-                        fromLedger:
-                          $ref: '#/components/schemas/XrplFromLedgerParameter'
-                        toLedger:
-                          $ref: '#/components/schemas/XrplToLedgerParameter'
-                    - title: Date Range
-                      type: object
-                      properties:
-                        fromDate:
-                          $ref: '#/components/schemas/XrplFromDateParameter'
-                        toDate:
-                          $ref: '#/components/schemas/XrplToDateParameter'
+                    fromLedger:
+                      $ref: '#/components/schemas/XrplFromLedgerParameter'
+                    toLedger:
+                      $ref: '#/components/schemas/XrplToLedgerParameter'
+                    fromDate:
+                      $ref: '#/components/schemas/XrplFromDateParameter'
+                    toDate:
+                      $ref: '#/components/schemas/XrplToDateParameter'
                 - $ref: '#/components/schemas/PaginationParameter'
               default:
                 currency: USD
