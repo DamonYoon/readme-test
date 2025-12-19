@@ -10,3 +10,4 @@
 - gettokenpricesbycontracts
 - gettokentransfersbyaccount
 - gettokentransfersbycontract
+- gettokentransfersbycurrencyandissuer

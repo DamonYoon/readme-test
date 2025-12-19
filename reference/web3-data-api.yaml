@@ -3834,11 +3834,19 @@ paths:
                           $ref: '#/components/schemas/EvmFromDateParameter'
                         toDate:
                           $ref: '#/components/schemas/EvmToDateParameter'
+                    - $ref: '#/components/schemas/PaginationParameter'
+                    - type: object
+                      properties:
                         withZeroValue:
                           $ref: '#/components/schemas/WithZeroValueParameter'
                         withFunction:
                           $ref: '#/components/schemas/WithFunctionParameter'
-                    - $ref: '#/components/schemas/PaginationParameter'
+                  default:
+                    accountAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+                    fromDate: '2025-05-01T00:00:00+00:00'
+                    toDate: '2025-07-01T00:00:00+00:00'
+                    withZeroValue: true
+                    withFunction: true
                 - title: Tron
                   allOf:
                     - type: object
@@ -3855,9 +3863,17 @@ paths:
                           $ref: '#/components/schemas/TronFromDateParameter'
                         toDate:
                           $ref: '#/components/schemas/TronToDateParameter'
+                    - $ref: '#/components/schemas/PaginationParameter'
+                    - type: object
+                      properties:
                         withZeroValue:
                           $ref: '#/components/schemas/WithZeroValueParameter'
-                    - $ref: '#/components/schemas/PaginationParameter'
+                  default:
+                    accountAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
+                    fromDate: '2025-05-01T00:00:00+00:00'
+                    toDate: '2025-07-01T00:00:00+00:00'
+                    withZeroValue: true
+                    withFunction: true
                 - title: XRPL
                   allOf:
                     - type: object
@@ -3875,6 +3891,10 @@ paths:
                         toDate:
                           $ref: '#/components/schemas/XrplToDateParameter'
                     - $ref: '#/components/schemas/PaginationParameter'
+                  default:
+                    accountAddress: rMwjYedjc7qqsPS4i5J2Ps9vcyQKqJ4Ao
+                    fromDate: '2025-05-01T00:00:00+00:00'
+                    toDate: '2025-07-01T00:00:00+00:00'
       responses:
         '200':
           description: Successful Response
@@ -4021,18 +4041,19 @@ paths:
                           $ref: '#/components/schemas/EvmFromDateParameter'
                         toDate:
                           $ref: '#/components/schemas/EvmToDateParameter'
+                    - $ref: '#/components/schemas/PaginationParameter'
+                    - type: object
+                      properties:
                         withZeroValue:
                           $ref: '#/components/schemas/WithZeroValueParameter'
                         withFunction:
                           $ref: '#/components/schemas/WithFunctionParameter'
-                    - $ref: '#/components/schemas/PaginationParameter'
                   default:
                     contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
                     fromDate: '2025-05-01T00:00:00+00:00'
                     toDate: '2025-07-01T00:00:00+00:00'
                     withZeroValue: true
                     withFunction: true
-                    withContract: true
                 - title: Tron
                   allOf:
                     - type: object
@@ -4050,16 +4071,17 @@ paths:
                           $ref: '#/components/schemas/TronFromDateParameter'
                         toDate:
                           $ref: '#/components/schemas/TronToDateParameter'
+                    - $ref: '#/components/schemas/PaginationParameter'
+                    - type: object
+                      properties:
                         withZeroValue:
                           $ref: '#/components/schemas/WithZeroValueParameter'
-                    - $ref: '#/components/schemas/PaginationParameter'
                   default:
                     contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
                     fromDate: '2025-05-01T00:00:00+00:00'
                     toDate: '2025-07-01T00:00:00+00:00'
                     withZeroValue: true
                     withFunction: true
-                    withContract: true
       responses:
         '200':
           description: Successful Response
@@ -4202,6 +4224,115 @@ paths:
                           value: '70000000'
                       input: >-
                         0xa9059cbb00000000000000000000000039f6a6c85d39d5abad8a398310c52e7c374f2ba300000000000000000000000000000000000000000000000000000000042c1d80
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  /{chain}/{network}/token/getTokenTransfersByCurrencyAndIssuer:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Token API
+      description: |
+        특정 토큰의 전송 목록을 조회합니다.
+      summary: Get Token Transfers by Currency and Issuer
+      operationId: getTokenTransfersByCurrencyAndIssuer
+      parameters:
+        - $ref: '#/components/parameters/XrplChainParameter'
+        - $ref: '#/components/parameters/XrplNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  required:
+                    - currency
+                  properties:
+                    currency:
+                      $ref: '#/components/schemas/XrplCurrencyParameter'
+                    issuer:
+                      $ref: '#/components/schemas/XrplIssuerParameter'
+                    fromLedger:
+                      $ref: '#/components/schemas/XrplFromLedgerParameter'
+                    toLedger:
+                      $ref: '#/components/schemas/XrplToLedgerParameter'
+                    fromDate:
+                      $ref: '#/components/schemas/XrplFromDateParameter'
+                    toDate:
+                      $ref: '#/components/schemas/XrplToDateParameter'
+                - $ref: '#/components/schemas/PaginationParameter'
+              default:
+                currency: USD
+                issuer: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                fromDate: '2025-05-01T00:00:00+00:00'
+                toDate: '2025-07-01T00:00:00+00:00'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginationResponse'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/XrplTransfer'
+              example:
+                rpp: 3
+                count: 63552
+                cursor: >-
+                  eyJsZWRnZXJJbmRleCI6OTM4MTgwNzYsInRyYW5zYWN0aW9uSW5kZXgiOjQ3LCJ0cmFuc2FjdGlvbk1ldGFJbmRleCI6NCwidHJhbnNhY3Rpb25NZXRhU3ViSW5kZXgiOjB9
+                items:
+                  - ledgerIndex: 93818076
+                    ledgerTimestamp: 1738281491
+                    transactionIndex: 48
+                    transactionHash: >-
+                      6810B7781C45BA4D5DF657EDC41BD5DDEBCED89D6722B5D00CC0C32733DBED1D
+                    transactionType: Payment
+                    affectedNodesIndex: 3
+                    from: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    to: rM7XX128rYPpsQKvo3qd31xtjatQFSijiw
+                    issuer: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    currency: USD
+                    value: '95.320296406243'
+                  - ledgerIndex: 93818076
+                    ledgerTimestamp: 1738281491
+                    transactionIndex: 48
+                    transactionHash: >-
+                      6810B7781C45BA4D5DF657EDC41BD5DDEBCED89D6722B5D00CC0C32733DBED1D
+                    transactionType: Payment
+                    affectedNodesIndex: 1
+                    from: rhubarbMVC2nzASf3qSGQcUKtLnAzqcBjp
+                    to: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    issuer: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    currency: USD
+                    value: '95.51093699905538'
+                  - ledgerIndex: 93818076
+                    ledgerTimestamp: 1738281491
+                    transactionIndex: 47
+                    transactionHash: >-
+                      38ED29994F80797419EE81B351A3F0EAE09DFC1B8B9637A343EF741F19F0551E
+                    transactionType: Payment
+                    affectedNodesIndex: 4
+                    from: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    to: rhubarbMVC2nzASf3qSGQcUKtLnAzqcBjp
+                    issuer: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+                    currency: USD
+                    value: '95.51093699905538'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -4411,6 +4542,29 @@ components:
           - hoodi
           - amoy
           - kairos
+        default: mainnet
+    XrplChainParameter:
+      name: chain
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 체인을 지정하는 파라미터입니다. API에 따라 지원되는 체인이 다를 수 있습니다.
+        enum:
+          - xrpl
+        default: xrpl
+    XrplNetworkParameter:
+      name: network
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 네트워크를 지정하는 파라미터입니다. API에 따라 지원되는 네트워크가 다를 수 있습니다.
+          - `xrpl`: mainnet
+        enum:
+          - mainnet
         default: mainnet
   schemas:
     EvmNftContractAddressParameter:
@@ -6021,6 +6175,33 @@ components:
                 Transaction의 타입을 나타내는 필드입니다.
               example: Payment
         - $ref: '#/components/schemas/XrplTransferInTransaction'
+    XrplCurrencyParameter:
+      type: string
+      description: >
+        조회하고자 하는 화폐의 심볼을 지정하는 파라미터로, 예를 들어 "USD"나 "EUR"처럼 ISO-4217 형식의 문자열을 입력할
+        수 있습니다.
+      examples:
+        - USD
+        - EUR
+        - KRW
+        - JPY
+        - CNY
+        - GBP
+        - AUD
+        - CAD
+        - CHF
+        - NZD
+        - SEK
+    XrplIssuerParameter:
+      type: string
+      description: >
+        조회하고자 하는 화폐의 발행자를 지정하는 파라미터로, 25~35자리 길이의 Base58 인코딩 문자열("r"로 시작)을 사용해
+        발행자 계정 주소를 입력합니다.
+      default: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+      examples:
+        - rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+        - rMwjYedjc7qqsPS4i5J2Ps9vcyQKqJ4Ao
+        - rU95DuX5EzB27h66pQ387CwoPpDd89CnC
   responses:
     '400':
       description: Bad Request
