@@ -13,3 +13,4 @@
 - gettokentransfersbycurrencyandissuer
 - gettokensownedbyaccount
 - gettokentransferswithinrange
+- searchtokencontractmetadatabykeyword
