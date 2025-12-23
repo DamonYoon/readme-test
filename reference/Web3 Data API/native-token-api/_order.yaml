@@ -2,3 +2,6 @@
 - getnativeholders
 - getnativetransfersbyaccount
 - getnativetokenbalancebyaccount
+- getnativetokenbalancechangesbyaccount
+- getnativetokentransfersbyaccount
+- getnativetransferswithinrange
