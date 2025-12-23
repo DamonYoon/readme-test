@@ -5285,6 +5285,60 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /{chain}/{network}/native/getNativeTokenBalanceByAccount:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Native Token API
+      description: |
+        특정 Account가 보유한 네이티브 토큰의 잔고를 조회합니다.
+      summary: Get Native Token Balance By Account
+      operationId: getNativeTokenBalanceByAccount
+      parameters:
+        - $ref: '#/components/parameters/UtxoXrplChainParameter'
+        - $ref: '#/components/parameters/UtxoXrplNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountAddress
+              properties:
+                accountAddress:
+                  oneOf:
+                    - title: UTXO (Bitcoin, Dogecoin, Bitcoin Cash, ...)
+                      $ref: '#/components/schemas/UtxoAccountAddressParametr'
+                      default: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+                    - title: XRPL
+                      $ref: '#/components/schemas/XrplAccountAddressParameter'
+                      default: rMwjYedjc7qqsPS4i5J2Ps9vcyQKqJ4Ao
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - title: UTXO (Bitcoin, Dogecoin, Bitcoin Cash, ...)
+                    $ref: '#/components/schemas/UtxoBalance'
+                  - title: XRPL
+                    $ref: '#/components/schemas/XrplBalance'
+              example:
+                ownerAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+                balance: '7539884121988040715'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
 components:
   securitySchemes:
     api_key:
@@ -5576,6 +5630,35 @@ components:
         type: string
         description: |
           조회할 네트워크를 지정하는 파라미터입니다. API에 따라 지원되는 네트워크가 다를 수 있습니다.
+        enum:
+          - mainnet
+        default: mainnet
+    UtxoXrplChainParameter:
+      name: chain
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 체인을 지정하는 파라미터입니다. API에 따라 지원되는 체인이 다를 수 있습니다.
+        enum:
+          - bitcoin
+          - dogecoin
+          - bitcoincash
+          - xrpl
+        default: bitcoin
+    UtxoXrplNetworkParameter:
+      name: network
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 네트워크를 지정하는 파라미터입니다. API에 따라 지원되는 네트워크가 다를 수 있습니다.
+          - `bitcoin`: mainnet
+          - `dogecoin`: mainnet
+          - `bitcoincash`: mainnet
+          - `xrpl`: mainnet
         enum:
           - mainnet
         default: mainnet
@@ -7244,6 +7327,57 @@ components:
             트론 네트워크에서 제공하는 탈중앙화 거래소(DEX)의 교환 거래(Swap)를 식별하는 고유 ID입니다. 이 ID를 통해
             특정 교환 트랜잭션을 구분하고, 어떤 자산 페어에서 거래가 이루어졌는지 추적할 수 있습니다. 교환 거래로 인한 전송이 아닌
             경우, null을 반환합니다.
+    UtxoAccountAddressParametr:
+      type: string
+      pattern: >-
+        ^(1[a-km-zA-HJ-NP-Z1-9]{25,33}|3[a-km-zA-HJ-NP-Z1-9]{25,33}|bc1q[a-z0-9]{38,59}|bc1p[a-z0-9]{58}|D[a-km-zA-HJ-NP-Z1-9]{25,33}|9[a-km-zA-HJ-NP-Z1-9]{25,33}|A[a-km-zA-HJ-NP-Z1-9]{25,33}|q[a-z0-9]{38,59}|p[a-z0-9]{58})$
+      description: |
+        조회하고자 하는 Account의 주소를 지정하는 파라미터입니다.
+      examples:
+        - 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+        - bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+        - 34HbW9GjC6bUY46VhxR3qJE314YbYjZ1
+        - qrcuqadqrzp2uztjl9wn5sthepkg22majyxw4gmv6p
+    UtxoOwnerAddress:
+      type: string
+      pattern: >-
+        ^(1[a-km-zA-HJ-NP-Z1-9]{25,33}|3[a-km-zA-HJ-NP-Z1-9]{25,33}|bc1q[a-z0-9]{38,59}|bc1p[a-z0-9]{58}|D[a-km-zA-HJ-NP-Z1-9]{25,33}|9[a-km-zA-HJ-NP-Z1-9]{25,33}|A[a-km-zA-HJ-NP-Z1-9]{25,33}|q[a-z0-9]{38,59}|p[a-z0-9]{58})$
+      description: |
+        소유자 주소를 나타내는 필드입니다.
+      examples:
+        - 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+        - bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+        - 34HbW9GjC6bUY46VhxR3qJE314YbYjZ1
+        - qrcuqadqrzp2uztjl9wn5sthepkg22majyxw4gmv6p
+    UtxoBalance:
+      type: object
+      required:
+        - ownerAddress
+        - balance
+      properties:
+        ownerAddress:
+          $ref: '#/components/schemas/UtxoOwnerAddress'
+        balance:
+          $ref: '#/components/schemas/UtxoBalance'
+    XrplOwnerAddress:
+      type: string
+      pattern: ^r[1-9A-HJ-NP-Za-km-z]{25,35}$
+      description: >
+        XRPL 계정 주소를 나타내는 필드입니다. "r"로 시작하는 25~35자리 길이의 Base58 인코딩 문자열 형태의 계정
+        주소입니다.
+      examples:
+        - r34HbW9GjC6bUY46VhxR3qJE314YbYjZ1
+        - rMdG3ju8pgyVh29ELPWaDuA74CpWW6Fxns
+    XrplBalance:
+      type: object
+      required:
+        - ownerAddress
+        - balance
+      properties:
+        ownerAddress:
+          $ref: '#/components/schemas/XrplOwnerAddress'
+        balance:
+          $ref: '#/components/schemas/XrplBalance'
   responses:
     '400':
       description: Bad Request
