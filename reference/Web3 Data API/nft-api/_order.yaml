@@ -1,13 +1,1 @@
-- getnftcontractmetadatabycontracts
-- getnftcontractsbyaccount
-- getnftholdersbycontract
-- getnftholdersbytokenid
-- getnftmetadatabycontract
-- getnftmetadatabytokenids
-- getnfttransfersbyaccount
-- getnfttransfersbycontract
-- getnfttransfersbytokenid
-- getnfttransferswithinrange
-- getnftsownedbyaccount
-- searchnftcontractmetadatabykeyword
-- syncnftmetadata
+[]
