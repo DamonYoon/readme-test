@@ -7221,7 +7221,6 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/PaginationParameter'
                 - oneOf:
                     - title: Aptos
                       type: object
@@ -7245,6 +7244,7 @@ paths:
                           $ref: '#/components/schemas/EvmFromDateParameter'
                         toDate:
                           $ref: '#/components/schemas/EvmToDateParameter'
+                - $ref: '#/components/schemas/PaginationParameter'
               default:
                 fromDate: '2025-01-01T00:00:00+00:00'
                 toDate: '2025-04-01T00:00:00+00:00'
