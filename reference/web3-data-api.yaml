@@ -9281,7 +9281,6 @@ components:
           <strong style="color: red;">*</strong> Kaia의 경우, "earliest"를 입력시 Kaia 하드포크 시점의 블록이 조회됩니다.
           - Mainnet: 162,900,480 (Aug 29, 2024 11:08:01 UTC+9)
 
-        ---
         **Notes**
         - **Constraints**
           - toBlock으로 지정한 블록은 fromBlock으로 지정한 블록보다 이후 블록이거나 동일한 블록이어야 합니다. (`fromBlock ≤ toBlock`)
@@ -9312,20 +9311,15 @@ components:
         따라야 하며, 초 단위까지 입력해야 합니다.
 
 
-        ---
+        <strong style="color: red;">*</strong> 유의사항:
 
-        **Notes**
+        - toDate 없이 fromDate만 제공되면, 입력한 fromDate부터 최근 시간까지의 결과가 조회됩니다.
 
-        - **Constraints**
-          - toDate 없이 fromDate만 제공되면, 입력한 fromDate부터 최근 시간까지의 결과가 조회됩니다.
-          - fromDate 값은 toDate 값과 같거나 더 과거의 값을 가져야 합니다.
-          - fromDate와 toDate에 동일한 값을 입력하면, 입력한 날짜에서 발생한 결과만 조회됩니다.
-          - 블록을 지정하는 파라미터 (fromBlock, toBlock)와 날짜를 지정하는 파라미터 (fromDate, toDate)는 혼용해서 사용할 수 없습니다.
+        - fromDate 값은 toDate 값과 같거나 더 과거의 값을 가져야 합니다.
 
-        - **Testnet Data Retention Policy**
-          - 테스트넷 데이터는 일정 기간 이후 삭제될 수 있습니다.
-          - 과거 블록을 기준으로 조회할 경우 데이터가 존재하지 않을 수 있습니다.
-          - 자세한 내용은 Testnet Data Retention 정책을 참고하세요. (https://developer.nodit.io/page/1023-testnet-data-retention)
+        - fromDate와 toDate에 동일한 값을 입력하면, 입력한 날짜에서 발생한 결과만 조회됩니다.
+
+        - 이 필드는 fromBlock, toBlock과 함께 사용할 수 없습니다.
       pattern: >-
         ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?(?:Z|[+-][0-9]{2}:[0-9]{2})$
       example: '2025-01-01T00:00:00+00:00'
@@ -10855,8 +10849,6 @@ components:
         - block tag: "earliest" 또는 "latest"를 입력하여 조회 가능한 가장 오래된 블록 또는 최신 블록을
         조회합니다.
 
-
-        ---
 
         **Notes**
 
