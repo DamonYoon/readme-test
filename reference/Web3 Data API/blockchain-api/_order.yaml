@@ -3,3 +3,5 @@
 - getgasprice
 - getinternaltransactionsbyaccount
 - getinternaltransactionsbytransactionhash
+- getledgerbyhashorindex
+- getledgerswithinrange
