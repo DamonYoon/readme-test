@@ -6994,29 +6994,31 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - title: Aptos
-                  type: object
-                  properties:
-                    fromBlock:
-                      $ref: '#/components/schemas/AptosFromBlockParameter'
-                    toBlock:
-                      $ref: '#/components/schemas/AptosToBlockParameter'
-                    fromDate:
-                      $ref: '#/components/schemas/AptosFromDateParameter'
-                    toDate:
-                      $ref: '#/components/schemas/AptosToDateParameter'
-                - title: EVM (Ethereum, Optimism, ...)
-                  type: object
-                  properties:
-                    fromBlock:
-                      $ref: '#/components/schemas/EvmFromBlockParameter'
-                    toBlock:
-                      $ref: '#/components/schemas/EvmToBlockParameter'
-                    fromDate:
-                      $ref: '#/components/schemas/EvmFromDateParameter'
-                    toDate:
-                      $ref: '#/components/schemas/EvmToDateParameter'
+              allOf:
+                - $ref: '#/components/schemas/PaginationParameter'
+                - oneOf:
+                    - title: Aptos
+                      type: object
+                      properties:
+                        fromBlock:
+                          $ref: '#/components/schemas/AptosFromBlockParameter'
+                        toBlock:
+                          $ref: '#/components/schemas/AptosToBlockParameter'
+                        fromDate:
+                          $ref: '#/components/schemas/AptosFromDateParameter'
+                        toDate:
+                          $ref: '#/components/schemas/AptosToDateParameter'
+                    - title: EVM (Ethereum, Optimism, ...)
+                      type: object
+                      properties:
+                        fromBlock:
+                          $ref: '#/components/schemas/EvmFromBlockParameter'
+                        toBlock:
+                          $ref: '#/components/schemas/EvmToBlockParameter'
+                        fromDate:
+                          $ref: '#/components/schemas/EvmFromDateParameter'
+                        toDate:
+                          $ref: '#/components/schemas/EvmToDateParameter'
               default:
                 fromDate: '2025-01-01T00:00:00+00:00'
                 toDate: '2025-04-01T00:00:00+00:00'
@@ -7026,11 +7028,20 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - title: Aptos
-                    $ref: '#/components/schemas/AptosBlock'
-                  - title: EVM (Ethereum, Optimism, ...)
-                    $ref: '#/components/schemas/EvmBlock'
+                allOf:
+                  - $ref: '#/components/schemas/PaginationResponse'
+                  - type: object
+                    required:
+                      - items
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          oneOf:
+                            - title: Aptos
+                              $ref: '#/components/schemas/AptosBlock'
+                            - title: EVM (Ethereum, Optimism, ...)
+                              $ref: '#/components/schemas/EvmBlock'
               example: {}
         '400':
           $ref: '#/components/responses/400'
