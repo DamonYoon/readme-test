@@ -9248,7 +9248,6 @@ components:
         - block hash: 64자리 16진수("0x" 포함).
         - block tag: "earliest" 또는 "latest"를 사용하여 조회 가능한 가장 오래된 블록 또는 최신 블록을 지정.
 
-        ---
         **Notes**
         - **Constraints**
           - fromBlock으로 지정한 블록은 toBlock으로 지정한 블록보다 이전 블록이거나 동일한 블록이어야 합니다. (`fromBlock ≤ toBlock`)
