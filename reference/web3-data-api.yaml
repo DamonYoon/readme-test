@@ -9401,6 +9401,121 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /{chain}/{network}/blockchain/getNextNonceByAccount:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Blockchain API
+      description: |
+        특정 Account의 다음 nonce를 조회합니다.
+      summary: Get Next Nonce by Account
+      operationId: getNextNonceByAccount
+      parameters:
+        - $ref: '#/components/parameters/EvmChainParameter'
+        - $ref: '#/components/parameters/EvmNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountAddress
+              properties:
+                accountAddress:
+                  $ref: '#/components/schemas/EvmAccountAddressParameter'
+              default:
+                accountAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nonce:
+                    type: string
+                    description: 조회한 계정의 다음 nonce 값을 나타냅니다. 이 값은 트랜잭션을 생성할 때 사용됩니다.
+                    pattern: ^[0-9]+$
+              example:
+                nonce: '6'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  /{chain}/{network}/blockchain/getTotalTransactionCountByAccount:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Blockchain API
+      description: |
+        특정 Account의 총 트랜잭션 수를 조회합니다.
+      summary: Get Total Transaction Count by Account
+      operationId: getTotalTransactionCountByAccount
+      parameters:
+        - $ref: '#/components/parameters/AllChainParameter'
+        - $ref: '#/components/parameters/AllNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountAddress
+              properties:
+                accountAddress:
+                  oneOf:
+                    - title: EVM (Ethereum, Optimism, ...)
+                      $ref: '#/components/schemas/EvmAccountAddressParameter'
+                      default: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+                    - title: Tron
+                      $ref: '#/components/schemas/TronAccountAddressParameter'
+                      default: TJUZV19fY62wBMbBqU4Z3oYTq5MZfHqXpE
+                    - title: Bitcoin, Dogecoin, Bitcoincash
+                      $ref: '#/components/schemas/UtxoAccountAddressParameter'
+                      default: bc1q25555555555555555555555555555555555555
+                    - title: XRPL
+                      $ref: '#/components/schemas/XrplAccountAddressParameter'
+                      default: rLuz2EkgayHgx2UNtr1sjw6RvW9FdZr
+                    - title: Aptos
+                      $ref: '#/components/schemas/AptosAccountAddressParameter'
+                      default: >-
+                        0x88fbd33f54e1126269769780feb24480428179f552e2313fbe571b72e62a1ca1
+              default:
+                accountAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionCount:
+                    type: integer
+                    description: 조회한 계정의 총 트랜잭션 수를 나타냅니다.
+              example:
+                transactionCount: 100
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
 components:
   securitySchemes:
     api_key:
@@ -9844,6 +9959,63 @@ components:
           - `optimism`: mainnet, sepolia
           - `polygon`: mainnet, amoy
           - `luniverse`: mainnet
+        enum:
+          - mainnet
+          - sepolia
+          - hoodi
+          - amoy
+          - kairos
+        default: mainnet
+    AllChainParameter:
+      name: chain
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 체인을 지정하는 파라미터입니다. API에 따라 지원되는 체인이 다를 수 있습니다.
+        enum:
+          - aptos
+          - bitcoin
+          - bitcoincash
+          - dogecoin
+          - arbitrum
+          - base
+          - chiliz
+          - ethereum
+          - ethereumclassic
+          - giwa
+          - kaia
+          - optimism
+          - polygon
+          - luniverse
+          - tron
+          - xrpl
+        default: ethereum
+    AllNetworkParameter:
+      name: network
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 네트워크를 지정하는 파라미터입니다. API에 따라 지원되는 네트워크가 다를 수 있습니다.
+          - `aptos`: mainnet
+          - `bitcoin`: mainnet
+          - `bitcoincash`: mainnet
+          - `dogecoin`: mainnet
+          - `arbitrum`: mainnet, sepolia
+          - `base`: mainnet, sepolia
+          - `chiliz`: mainnet
+          - `ethereum`: mainnet, sepolia, hoodi
+          - `ethereumclassic`: mainnet
+          - `giwa`: sepolia
+          - `kaia`: mainnet, kairos
+          - `optimism`: mainnet, sepolia
+          - `polygon`: mainnet, amoy
+          - `luniverse`: mainnet
+          - `tron`: mainnet
+          - `xrpl`: mainnet
         enum:
           - mainnet
           - sepolia
