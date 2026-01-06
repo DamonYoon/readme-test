@@ -7,3 +7,4 @@
 - getledgerswithinrange
 - getnextnoncebyaccount
 - gettotaltransactioncountbyaccount
+- gettransactionbyhash

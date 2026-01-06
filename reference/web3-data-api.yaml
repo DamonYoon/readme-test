@@ -2457,11 +2457,9 @@ paths:
                         items:
                           oneOf:
                             - title: Aptos
-                              $ref: >-
-                                #/components/schemas/AptosTokenBalanceChangeInTransaction
+                              $ref: '#/components/schemas/AptosTokenBalanceChange'
                             - title: XRPL
-                              $ref: >-
-                                #/components/schemas/XrplTokenBalanceChangeInTransaction
+                              $ref: '#/components/schemas/XrplTokenBalanceChange'
               example:
                 rpp: 5
                 page: 1
@@ -2610,8 +2608,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: >-
-                            #/components/schemas/AptosTokenBalanceChangeInTransaction
+                          $ref: '#/components/schemas/AptosTokenBalanceChange'
               example:
                 rpp: 2
                 page: 1
@@ -2707,8 +2704,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: >-
-                            #/components/schemas/AptosTokenBalanceChangeInTransaction
+                          $ref: '#/components/schemas/AptosTokenBalanceChange'
               example:
                 rpp: 2
                 page: 1
@@ -3113,8 +3109,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: >-
-                            #/components/schemas/AptosTokenBalanceChangeInTransaction
+                          $ref: '#/components/schemas/AptosTokenBalanceChange'
               example:
                 rpp: 2
                 page: 1
@@ -4425,7 +4420,7 @@ paths:
                                         - $ref: '#/components/schemas/TronContractMeta'
                                         - $ref: '#/components/schemas/TronTokenMeta'
                             - title: XRPL
-                              $ref: '#/components/schemas/XrplTransfer'
+                              $ref: '#/components/schemas/XrplTokenTransfer'
               example:
                 rpp: 2
                 count: 2191
@@ -4785,7 +4780,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: '#/components/schemas/XrplTransfer'
+                          $ref: '#/components/schemas/XrplTokenTransferRequired'
               example:
                 rpp: 3
                 count: 63552
@@ -4969,7 +4964,7 @@ paths:
                                         - $ref: '#/components/schemas/TronContractMeta'
                                         - $ref: '#/components/schemas/TronTokenMeta'
                             - title: XRPL
-                              $ref: '#/components/schemas/XrplTransfer'
+                              $ref: '#/components/schemas/XrplTokenTransfer'
               example:
                 rpp: 2
                 count: 2191
@@ -5707,8 +5702,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: >-
-                            #/components/schemas/XrplTokenBalanceChangeInTransaction
+                          $ref: '#/components/schemas/XrplTokenBalanceChange'
               example:
                 rpp: 20
                 cursor: >-
@@ -6252,8 +6246,8 @@ paths:
       summary: Get Block by Hash or Number
       operationId: getBlockByHashOrNumber
       parameters:
-        - $ref: '#/components/parameters/EvmUtxoAptosChainParameter'
-        - $ref: '#/components/parameters/EvmUtxoAptosNetworkParameter'
+        - $ref: '#/components/parameters/EvmAptosUtxoChainParameter'
+        - $ref: '#/components/parameters/EvmAptosUtxoNetworkParameter'
       requestBody:
         required: true
         content:
@@ -9480,10 +9474,10 @@ paths:
                       default: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
                     - title: Tron
                       $ref: '#/components/schemas/TronAccountAddressParameter'
-                      default: TJUZV19fY62wBMbBqU4Z3oYTq5MZfHqXpE
+                      default: TT2T17KZhoDu47i2E4FWxfG79zdkEWkU9N
                     - title: Bitcoin, Dogecoin, Bitcoincash
                       $ref: '#/components/schemas/UtxoAccountAddressParameter'
-                      default: bc1q25555555555555555555555555555555555555
+                      default: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
                     - title: XRPL
                       $ref: '#/components/schemas/XrplAccountAddressParameter'
                       default: rLuz2EkgayHgx2UNtr1sjw6RvW9FdZr
@@ -9506,6 +9500,527 @@ paths:
                     description: 조회한 계정의 총 트랜잭션 수를 나타냅니다.
               example:
                 transactionCount: 100
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  /{chain}/{network}/blockchain/getTransactionByHash:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Blockchain API
+      description: |
+        특정 트랜잭션의 정보를 조회합니다.
+      summary: Get Transaction By Hash
+      operationId: getTransactionByHash
+      parameters:
+        - $ref: '#/components/parameters/EvmAptosXrplChainParameter'
+        - $ref: '#/components/parameters/EvmAptosXrplNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - transactionHash
+              properties:
+                transactionHash:
+                  oneOf:
+                    - title: Aptos
+                      allOf:
+                        - $ref: '#/components/schemas/AptosTransactionHashParameter'
+                        - $ref: >-
+                            #/components/schemas/AptosWithBalanceChangesParameter
+                      default: >-
+                        0xaf2fba4b6190c4b87d9479f3eb62c093f452f27c388dab4afeae98ae8ec00005
+                    - title: EVM (Ethereum, Optimism, ...)
+                      allOf:
+                        - $ref: '#/components/schemas/EvmTransactionHashParameter'
+                        - $ref: '#/components/schemas/EvmWithLogsParameter'
+                        - $ref: '#/components/schemas/EvmWithDecodeParameter'
+                      default: >-
+                        0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
+                    - title: XRPL
+                      allOf:
+                        - $ref: '#/components/schemas/XrplTransactionHashParameter'
+                        - $ref: '#/components/schemas/XrplWithBalanceChangesParameter'
+                        - $ref: '#/components/schemas/XrplWithTokenTransfersParameter'
+                      default: >-
+                        0279a3b4d0e90af3632171aa3d4a82d99c97ccc7eeeea203a705901cff788308
+              default:
+                transactionHash: >-
+                  0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - title: Aptos
+                    $ref: '#/components/schemas/AptosTransaction'
+                  - title: EVM (Ethereum, Optimism, ...)
+                    allOf:
+                      - $ref: '#/components/schemas/EvmTransactionWithReceipt'
+                      - type: object
+                        properties:
+                          logs:
+                            allOf:
+                              - $ref: '#/components/schemas/EvmLog'
+                              - type: object
+                                properties:
+                                  decodedLog:
+                                    $ref: '#/components/schemas/EvmDecodedLog'
+                  - title: XRPL
+                    $ref: '#/components/schemas/XrplTransaction'
+              example:
+                transactionHash: >-
+                  0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                transactionIndex: '6'
+                blockHash: >-
+                  0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                blockNumber: 18908894
+                from: '0x49BCbc58848AC642B48f3D824D8b728a1045D08b'
+                to: '0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f'
+                value: '0'
+                input: >-
+                  0x06bb5402000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000640000089b83a98000000000000000000000000000000000000000000661dbd53db00000000000000000000000000000000000000000000000000000000000005440965d04b0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000004600000000000000000000000000000000000000000014adf4b7320334b900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009bc8430b2577b5a268bb3c5c02000000000000000000000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f659200430000b4016f6d0000000000000000738d57e4422232b27c9cdecea7df0000000000000000000000004521c9ad6a3d4230803ab752ed238be11f8b342f000000000000000000000000dc63269ea166b70d4780b3a11f5c825c2b761b010000000000000000000000000978522654b5c8e6aee50110baa146d35e064f390000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a88800cd213da5ae406ce248380802bd53b476470000000000000000000000000000000000000000014adf4b7320334b9000000000000000000000000000000000000000000000009944017fd9dacf4eacfc5cca0000012400000124000001240000012400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000001bebfa75143000000000000000000000000000000000000000000000000000000a800000024000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a863592c2b00000000000000000000000000000000000000000000000000000000659200fdbf15fcd80000000000000000000000005e92d4021e49f9a2967b4ea1d20213b3a1c7c912000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000040202470800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001800c526000000000b8a49d816cc709b6eadb09498030ae3416b66dc00000000874d26f8f5dd55ee1a4167c49965b991c1c9530a00000000d1742b3c4fbb096990c8950fa635aec75b30781a00000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f000000008571c129f335832f6bbc76d49414ad2b8371a422000000000000000000000000000000000000000000000000ffffffff3100000000000000000000000000000000000000000000000000000000000000000040a95f7183ca6ad5e6de73bd5652c7ba94efa27e1c3ba4a1691747ae23f4efb489c2478e0333ad753522e9168944216a083a5148966dc78ffd99f8c55aaa390f2f000000000000000000000000000000000000000000000000000000000000006aa88800cd213da5ae406ce248380802bd53b4764701ad3b67bca8935cb510c8d18bd45f0b94f54a968f10008000000000000000000000394cb9e147b8b288e38615ae04f442a037bcb99f0080000000000000000000000dba3dfee43d9b6450c716c58fdae8d3be37fdc9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000004521c9ad6a3d4230803ab752ed238be11f8b342f000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000652113bc
+                functionSelector: '0x06bb5402'
+                nonce: '28144'
+                gas: '396793'
+                gasPrice: '13067776190'
+                maxFeePerGas: '20926539785'
+                maxPriorityFeePerGas: '493754437'
+                gasUsed: '249788'
+                cumulativeGasUsed: '1174041'
+                effectiveGasPrice: '13067776190'
+                contractAddress: null
+                type: '2'
+                status: '1'
+                logsBloom: >-
+                  0x0020000000000000100000008000000000000400000200000000000000010400000000000000000000000000020000008200000008008000000000000020080000000000000008000000008800000020000000000000000000000000800100100000a000000000000000000000000000000000000000000010000050000400000000000000000000000000000020000000000000000000080001004000000000020000000000000000100000000004000000000080200000000000000000000200000002000000000000000000000000000000000000001004000000002000480010200000800000020400000000000000040002000000000000000008000000
+                accessList: []
+                timestamp: 1704067199
+                logs:
+                  - contractAddress: '0x1111111254EEB25477B68fb85Ed929f73A960582'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0xeccf0eccfe8895b8100d710ca1f3974f4ef013f82f74a3854b88d9a1b0d6df4a0000000000000000000000000000000000000000000000000000000000000000
+                    logIndex: 35
+                    removed: false
+                    topics:
+                      - >-
+                        0xb9ed0243fdf00f0545c63a0af8850c090d86bb46682baec4bf3c496814fe4f02
+                      - >-
+                        0x0000000000000000000000000978522654b5c8e6aee50110baa146d35e064f39
+                    decodedLog:
+                      name: OrderFilled
+                      eventFragment: OrderFilled
+                      signature: OrderFilled(address,bytes32,uint256)
+                      eventHash: >-
+                        0xb9ed0243fdf00f0545c63a0af8850c090d86bb46682baec4bf3c496814fe4f02
+                      args:
+                        - name: maker
+                          type: address
+                          value: '0x0978522654b5C8E6AEE50110baa146d35E064F39'
+                        - name: orderHash
+                          type: bytes32
+                          value: >-
+                            0xeccf0eccfe8895b8100d710ca1f3974f4ef013f82f74a3854b88d9a1b0d6df4a
+                        - name: remaining
+                          type: uint256
+                          value: '0'
+                  - contractAddress: '0x4521C9aD6A3D4230803aB752Ed238BE11F8B342F'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x0000000000000000000000000000000000000000014adf4b7320334b90000000
+                    logIndex: 36
+                    removed: false
+                    topics:
+                      - >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      - >-
+                        0x0000000000000000000000000978522654b5c8e6aee50110baa146d35e064f39
+                      - >-
+                        0x000000000000000000000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f
+                    decodedLog:
+                      name: Transfer
+                      eventFragment: Transfer
+                      signature: Transfer(address,address,uint256)
+                      eventHash: >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      args:
+                        - name: from
+                          type: address
+                          value: '0x0978522654b5C8E6AEE50110baa146d35E064F39'
+                        - name: to
+                          type: address
+                          value: '0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f'
+                        - name: value
+                          type: uint256
+                          value: '400000000000000000000000000'
+                  - contractAddress: '0x4521C9aD6A3D4230803aB752Ed238BE11F8B342F'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x000000000000000000000000000000000000000001490c4e3cdf40e186e23125
+                    logIndex: 37
+                    removed: false
+                    topics:
+                      - >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      - >-
+                        0x000000000000000000000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f
+                      - >-
+                        0x000000000000000000000000394cb9e147b8b288e38615ae04f442a037bcb99f
+                    decodedLog:
+                      name: Transfer
+                      eventFragment: Transfer
+                      signature: Transfer(address,address,uint256)
+                      eventHash: >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      args:
+                        - name: from
+                          type: address
+                          value: '0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f'
+                        - name: to
+                          type: address
+                          value: '0x394Cb9E147B8B288E38615ae04F442A037bCB99F'
+                        - name: value
+                          type: uint256
+                          value: '397794706283341083022864677'
+                  - contractAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x0000000000000000000000000000000000000000000000000929a32d39d40abe
+                    logIndex: 38
+                    removed: false
+                    topics:
+                      - >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      - >-
+                        0x000000000000000000000000394cb9e147b8b288e38615ae04f442a037bcb99f
+                      - >-
+                        0x0000000000000000000000000dba3dfee43d9b6450c716c58fdae8d3be37fdc9
+                    decodedLog:
+                      name: Transfer
+                      eventFragment: Transfer
+                      signature: Transfer(address,address,uint256)
+                      eventHash: >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      args:
+                        - name: from
+                          type: address
+                          value: '0x394Cb9E147B8B288E38615ae04F442A037bCB99F'
+                        - name: to
+                          type: address
+                          value: '0x0dBa3dfeE43d9B6450C716c58fdAE8D3BE37FdC9'
+                        - name: value
+                          type: uint256
+                          value: '660238235025541822'
+                  - contractAddress: '0x394Cb9E147B8B288E38615ae04F442A037bCB99F'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x00000000000000000000000000000000000000010a3ed7c32c86c4f07566d4de0000000000000000000000000000000000000000000000076677677ace6d147a
+                    logIndex: 39
+                    removed: false
+                    topics:
+                      - >-
+                        0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1
+                    decodedLog:
+                      name: Sync
+                      eventFragment: Sync
+                      signature: Sync(uint112,uint112)
+                      eventHash: >-
+                        0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1
+                      args:
+                        - name: reserve0
+                          type: uint112
+                          value: '82398984922411274958295979230'
+                        - name: reserve1
+                          type: uint112
+                          value: '136510692407211005050'
+                  - contractAddress: '0x394Cb9E147B8B288E38615ae04F442A037bCB99F'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x000000000000000000000000000000000000000001490c4e3cdf40e186e23125000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000929a32d39d40abe
+                    logIndex: 40
+                    removed: false
+                    topics:
+                      - >-
+                        0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
+                      - >-
+                        0x000000000000000000000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f
+                      - >-
+                        0x0000000000000000000000000dba3dfee43d9b6450c716c58fdae8d3be37fdc9
+                    decodedLog:
+                      name: Swap
+                      eventFragment: Swap
+                      signature: Swap(address,uint256,uint256,uint256,uint256,address)
+                      eventHash: >-
+                        0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
+                      args:
+                        - name: sender
+                          type: address
+                          value: '0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f'
+                        - name: amount0In
+                          type: uint256
+                          value: '397794706283341083022864677'
+                        - name: amount1In
+                          type: uint256
+                          value: '0'
+                        - name: amount0Out
+                          type: uint256
+                          value: '0'
+                        - name: amount1Out
+                          type: uint256
+                          value: '660238235025541822'
+                        - name: to
+                          type: address
+                          value: '0x0dBa3dfeE43d9B6450C716c58fdAE8D3BE37FdC9'
+                  - contractAddress: '0xDc63269eA166b70d4780b3A11F5C825C2b761B01'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x000000000000000000000000000000000000000099dc54f104913299ddb95711
+                    logIndex: 41
+                    removed: false
+                    topics:
+                      - >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      - >-
+                        0x0000000000000000000000000dba3dfee43d9b6450c716c58fdae8d3be37fdc9
+                      - >-
+                        0x000000000000000000000000a88800cd213da5ae406ce248380802bd53b47647
+                    decodedLog:
+                      name: Transfer
+                      eventFragment: Transfer
+                      signature: Transfer(address,address,uint256)
+                      eventHash: >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      args:
+                        - name: from
+                          type: address
+                          value: '0x0dBa3dfeE43d9B6450C716c58fdAE8D3BE37FdC9'
+                        - name: to
+                          type: address
+                          value: '0xA88800CD213dA5Ae406ce248380802BD53b47647'
+                        - name: value
+                          type: uint256
+                          value: '47617571307759996631732803345'
+                  - contractAddress: '0x0dBa3dfeE43d9B6450C716c58fdAE8D3BE37FdC9'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x00000000000000000000000000000000000000000000000dada0174f9819675b00000000000000000000000000000000000000e5c67ac74ac3d78cd7ef27ecc5
+                    logIndex: 42
+                    removed: false
+                    topics:
+                      - >-
+                        0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1
+                    decodedLog:
+                      name: Sync
+                      eventFragment: Sync
+                      signature: Sync(uint112,uint112)
+                      eventHash: >-
+                        0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1
+                      args:
+                        - name: reserve0
+                          type: uint112
+                          value: '252318698353681065819'
+                        - name: reserve1
+                          type: uint112
+                          value: '18204675677791253672618736741573'
+                  - contractAddress: '0x0dBa3dfeE43d9B6450C716c58fdAE8D3BE37FdC9'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x0000000000000000000000000000000000000000000000000929a32d39d40abe00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000099dc54f104913299ddb95711
+                    logIndex: 43
+                    removed: false
+                    topics:
+                      - >-
+                        0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
+                      - >-
+                        0x000000000000000000000000ad3b67bca8935cb510c8d18bd45f0b94f54a968f
+                      - >-
+                        0x000000000000000000000000a88800cd213da5ae406ce248380802bd53b47647
+                    decodedLog:
+                      name: Swap
+                      eventFragment: Swap
+                      signature: Swap(address,uint256,uint256,uint256,uint256,address)
+                      eventHash: >-
+                        0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
+                      args:
+                        - name: sender
+                          type: address
+                          value: '0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f'
+                        - name: amount0In
+                          type: uint256
+                          value: '660238235025541822'
+                        - name: amount1In
+                          type: uint256
+                          value: '0'
+                        - name: amount0Out
+                          type: uint256
+                          value: '0'
+                        - name: amount1Out
+                          type: uint256
+                          value: '47617571307759996631732803345'
+                        - name: to
+                          type: address
+                          value: '0xA88800CD213dA5Ae406ce248380802BD53b47647'
+                  - contractAddress: '0xDc63269eA166b70d4780b3A11F5C825C2b761B01'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x000000000000000000000000000000000000000099dc54f104913299ddb95711
+                    logIndex: 44
+                    removed: false
+                    topics:
+                      - >-
+                        0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+                      - >-
+                        0x000000000000000000000000a88800cd213da5ae406ce248380802bd53b47647
+                      - >-
+                        0x0000000000000000000000001111111254eeb25477b68fb85ed929f73a960582
+                    decodedLog:
+                      name: Approval
+                      eventFragment: Approval
+                      signature: Approval(address,address,uint256)
+                      eventHash: >-
+                        0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+                      args:
+                        - name: owner
+                          type: address
+                          value: '0xA88800CD213dA5Ae406ce248380802BD53b47647'
+                        - name: spender
+                          type: address
+                          value: '0x1111111254EEB25477B68fb85Ed929f73A960582'
+                        - name: value
+                          type: uint256
+                          value: '47617571307759996631732803345'
+                  - contractAddress: '0xDc63269eA166b70d4780b3A11F5C825C2b761B01'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x000000000000000000000000000000000000000099dc54f104913299ddb95711
+                    logIndex: 45
+                    removed: false
+                    topics:
+                      - >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      - >-
+                        0x000000000000000000000000a88800cd213da5ae406ce248380802bd53b47647
+                      - >-
+                        0x0000000000000000000000000978522654b5c8e6aee50110baa146d35e064f39
+                    decodedLog:
+                      name: Transfer
+                      eventFragment: Transfer
+                      signature: Transfer(address,address,uint256)
+                      eventHash: >-
+                        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+                      args:
+                        - name: from
+                          type: address
+                          value: '0xA88800CD213dA5Ae406ce248380802BD53b47647'
+                        - name: to
+                          type: address
+                          value: '0x0978522654b5C8E6AEE50110baa146d35E064F39'
+                        - name: value
+                          type: uint256
+                          value: '47617571307759996631732803345'
+                  - contractAddress: '0xDc63269eA166b70d4780b3A11F5C825C2b761B01'
+                    transactionHash: >-
+                      0x1632ac1627903e586c8ea0b1c134908c34ee95e84face9a303abd63686eb2022
+                    transactionIndex: 6
+                    blockHash: >-
+                      0x2757d9075d142237a41aa35e60e576b663d073674f7982205121a4ce168efbd1
+                    blockNumber: 18908894
+                    data: >-
+                      0x0000000000000000000000000000000000000000000000000000000000000000
+                    logIndex: 46
+                    removed: false
+                    topics:
+                      - >-
+                        0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+                      - >-
+                        0x000000000000000000000000a88800cd213da5ae406ce248380802bd53b47647
+                      - >-
+                        0x0000000000000000000000001111111254eeb25477b68fb85ed929f73a960582
+                    decodedLog:
+                      name: Approval
+                      eventFragment: Approval
+                      signature: Approval(address,address,uint256)
+                      eventHash: >-
+                        0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+                      args:
+                        - name: owner
+                          type: address
+                          value: '0xA88800CD213dA5Ae406ce248380802BD53b47647'
+                        - name: spender
+                          type: address
+                          value: '0x1111111254EEB25477B68fb85Ed929f73A960582'
+                        - name: value
+                          type: uint256
+                          value: '0'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -9866,7 +10381,7 @@ components:
         enum:
           - mainnet
         default: mainnet
-    EvmUtxoAptosChainParameter:
+    EvmAptosUtxoChainParameter:
       name: chain
       in: path
       required: true
@@ -9890,7 +10405,7 @@ components:
           - polygon
           - luniverse
         default: ethereum
-    EvmUtxoAptosNetworkParameter:
+    EvmAptosUtxoNetworkParameter:
       name: network
       in: path
       required: true
@@ -10016,6 +10531,53 @@ components:
           - `luniverse`: mainnet
           - `tron`: mainnet
           - `xrpl`: mainnet
+        enum:
+          - mainnet
+          - sepolia
+          - hoodi
+          - amoy
+          - kairos
+        default: mainnet
+    EvmAptosXrplChainParameter:
+      name: chain
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 체인을 지정하는 파라미터입니다. API에 따라 지원되는 체인이 다를 수 있습니다.
+        enum:
+          - aptos
+          - arbitrum
+          - base
+          - chiliz
+          - ethereum
+          - ethereumclassic
+          - giwa
+          - kaia
+          - optimism
+          - polygon
+          - luniverse
+        default: ethereum
+    EvmAptosXrplNetworkParameter:
+      name: network
+      in: path
+      required: true
+      schema:
+        type: string
+        description: |
+          조회할 네트워크를 지정하는 파라미터입니다. API에 따라 지원되는 네트워크가 다를 수 있습니다.
+          - `aptos`: mainnet
+          - `arbitrum`: mainnet, sepolia
+          - `base`: mainnet, sepolia
+          - `chiliz`: mainnet
+          - `ethereum`: mainnet, sepolia, hoodi
+          - `ethereumclassic`: mainnet
+          - `giwa`: sepolia
+          - `kaia`: mainnet, kairos
+          - `optimism`: mainnet, sepolia
+          - `polygon`: mainnet, amoy
+          - `luniverse`: mainnet
         enum:
           - mainnet
           - sepolia
@@ -11017,7 +11579,7 @@ components:
             - "gas": 가스비 지불
             - "refund_gas": 가스비 환불
           example: deposit
-    AptosTokenBalanceChangeInTransaction:
+    AptosTokenBalanceChange:
       allOf:
         - type: object
           required:
@@ -11109,7 +11671,7 @@ components:
             트랜잭션으로 인해 변경된 자산의 수량을 나타냅니다.
             수량의 증감 여부를 포함하며, XRP인 경우 XRP 단위로 표기되며 1 XRP는 1,000,000 drop에 해당합니다.
           example: '-100.22'
-    XrplTokenBalanceChangeInTransaction:
+    XrplTokenBalanceChange:
       allOf:
         - type: object
           required:
@@ -11548,7 +12110,7 @@ components:
           type: integer
           description: |
             토큰 전송 트랜잭션의 로그 인덱스를 나타내는 필드입니다. 트랜잭션에서 발생한 이벤트의 순서를 의미합니다.
-    XrplTransferInTransaction:
+    XrplTokenTransferRequired:
       type: object
       required:
         - affectedNodesIndex
@@ -11586,7 +12148,7 @@ components:
           type: string
           description: |
             트랜잭션의 값을 나타내는 필드입니다.
-    XrplTransfer:
+    XrplTokenTransfer:
       allOf:
         - type: object
           required:
@@ -11622,7 +12184,7 @@ components:
               description: |
                 Transaction의 타입을 나타내는 필드입니다.
               example: Payment
-        - $ref: '#/components/schemas/XrplTransferInTransaction'
+        - $ref: '#/components/schemas/XrplTokenTransferRequired'
     TronTokenTransferTrxTrc10:
       type: object
       required:
@@ -12630,6 +13192,1031 @@ components:
             - 044CD9B107E209F24F5342393F34493E7AFE99AE6F5051F2D75E186F07E1EAE8
             - 0D1DDF6974EA31918EB531F9212FC76BC47BCE9193839496474010D133C0BB1E
             - 1069423CDB7F19E082E6F418C779B19A0126B593832016D134A679EFB752CF0A
+    AptosTransactionHashParameter:
+      type: string
+      description: |
+        조회하고자 하는 트랜잭션의 해시를 지정하는 파라미터입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 입력할 수 있습니다.
+      pattern: ^0x[0-9a-fA-F]{64}$
+    AptosWithBalanceChangesParameter:
+      type: boolean
+      description: |
+        응답에 balanceChanges 필드의 포함 여부를 지정하는 파라미터입니다.
+
+        - balanceChanges 필드는 Native token(APT)와 Token의 잔고 변화를 포함하는 필드입니다.
+        - 이 파라미터에 true를 입력한 경우, 응답속도가 느려질 수 있습니다.
+      default: false
+    EvmWithLogsParameter:
+      type: boolean
+      description: >
+        응답에 logs 필드의 포함 여부를 지정하는 파라미터입니다.
+
+        - 이 파라미터에 true를 입력한 경우, 응답속도가 느려질 수 있습니다.
+
+        - logs 필드는 트랜잭션 실행 중 발생한 이벤트 로그를 포함하는 필드입니다.
+
+        - decodedLog는 logs에 종속된 필드입니다. withLogs=false인 경우, withDecode의 값과 관계없이
+        decodedLog는 반환되지 않습니다.
+      default: false
+    EvmWithDecodeParameter:
+      type: boolean
+      description: >
+        응답에 decodedInput, decodedLog 필드의 포함 여부를 지정하는 파라미터입니다.
+
+        - 이 파라미터에 true를 입력한 경우, 응답속도가 느려질 수 있습니다.
+
+        - decodedLog는 logs에 종속된 필드입니다. withLogs=false인 경우, withDecode의 값과 관계없이
+        decodedLog는 반환되지 않습니다.
+
+
+        <strong style="color: red;">*</strong> 유의사항:
+
+        - decodedInput은 제한된 ABI 정보를 기반으로 디코딩됩니다. 동일한 function selector를 사용하는 서로
+        다른 함수가 존재할 수 있으며, ERC 표준과 일치하는 selector인 경우 표준 기준으로 표시되므로 실제 호출된 함수와
+        decodedInput이 일치하지 않을 수 있습니다.
+      default: false
+    XrplTransactionHashParameter:
+      type: string
+      description: |
+        조회하고자 하는 트랜잭션의 해시를 지정하는 파라미터입니다. 64자리의 16진수 문자열 형태로 입력할 수 있습니다.
+      pattern: ^[0-9a-fA-F]{64}$
+    XrplWithBalanceChangesParameter:
+      type: boolean
+      description: |
+        응답에 balanceChanges 필드의 포함 여부를 지정하는 파라미터입니다.
+        - balanceChanges 필드는 Native Token(XRP)과 Issued Token의 잔고 변화를 포함하는 필드입니다.
+        - 이 파라미터에 true를 입력한 경우, 응답속도가 느려질 수 있습니다.
+      default: false
+    XrplWithTokenTransfersParameter:
+      type: boolean
+      description: |
+        응답에 tokenTransfers 필드의 포함 여부를 지정하는 파라미터입니다.
+        - tokenTransfers 필드는 Issued Token의 전송 내역을 포함하는 필드입니다.
+        - 이 파라미터에 true를 입력한 경우, 응답속도가 느려질 수 있습니다.
+      default: false
+    AptosTransaction:
+      type: object
+      description: |
+        Aptos transaction을 나타냅니다.
+      required:
+        - transactionHash
+        - transactionVersion
+        - blockHeight
+        - blockTimestamp
+        - expirationTimestampSecs
+        - gasUnitPrice
+        - gasUsed
+        - maxGasAmount
+        - secondarySigners
+        - sender
+        - sequenceNumber
+        - success
+        - vmStatus
+        - events
+        - balanceInAccounts
+        - balanceOutAccounts
+        - balanceChangedTokens
+      properties:
+        transactionHash:
+          type: string
+          description: >
+            트랜잭션의 고유 식별자를 나타내는 필드입니다.
+
+            트랜잭션의 모든 데이터(서명된 페이로드)를 포함하여 계산된 암호학적 해시값으로, 0x로 시작하는 64자리 16진수 문자열
+            형태로 제공됩니다. 트랜잭션의 무결성을 검증하고 트랜잭션을 고유하게 식별하는 데 사용됩니다.
+        transactionVersion:
+          type: integer
+          description: >
+            트랜잭션의 버전을 나타내는 필드입니다.
+
+            체인 상에서 트랜잭션의 순서를 나타내는 고유한 시퀀스 ID로, 0부터 시작하여 순차적으로 증가합니다. 트랜잭션의 실행
+            순서를 보장하고 특정 트랜잭션의 상태를 조회하는 데 사용됩니다.
+        blockHeight:
+          type: string
+          description: |
+            트랜잭션이 포함된 블록의 높이를 나타내는 필드입니다.
+            제네시스 블록(0)부터 시작하여 순차적으로 증가하는 정수값으로 제공됩니다.
+            이 값은 트랜잭션이 어느 블록에 포함되었는지를 식별하고, 해당 트랜잭션이 확정되었는지를 확인하는 데 사용됩니다.
+        blockTimestamp:
+          type: integer
+          description: >
+            블록 생성 시각을 나타내는 필드입니다.
+
+            마이크로초(microseconds) 단위의 UNIX 타임스탬프로 제공되며, 블록의 생성된 시점이자 해당 블록에 포함된
+            트랜잭션들이 처리된 시점을 의미합니다.
+        expirationTimestampSecs:
+          type: integer
+          description: |
+            트랜잭션의 만료 시각을 나타내는 필드입니다.
+            초 단위의 UNIX 타임스탬프로 제공되며, 이 시각이 지나면 트랜잭션이 체인에 포함될 수 없습니다.
+            트랜잭션의 유효 기간을 설정하여 오래된 트랜잭션이 처리되는 것을 방지합니다.
+        gasUnitPrice:
+          type: string
+          description: |
+            트랜잭션의 가스 단가를 나타내는 필드입니다.
+            Octas(1 APT = 10^8 Octas) 단위로 제공되며, 각 가스 단위당 지불할 금액을 의미합니다.
+            트랜잭션 처리의 우선순위를 결정하고 트랜잭션 수수료를 계산하는 데 사용됩니다.
+        gasUsed:
+          type: string
+          description: >
+            트랜잭션 실행에 실제로 사용된 가스의 양을 나타내는 필드입니다.
+
+            트랜잭션 처리에 소비된 컴퓨팅 자원의 양을 측정하는 단위입니다. 실제 트랜잭션 수수료는 gasUsed *
+            gasUnitPrice로 계산됩니다.
+        maxGasAmount:
+          type: string
+          description: >
+            트랜잭션에 사용할 수 있는 최대 가스량을 나타내는 필드입니다.
+
+            트랜잭션 실행 중 이 값을 초과하면 트랜잭션이 실패하며, 가스 비용 상한선 역할을 합니다. 사용자가 예상치 못한 높은
+            수수료를 지불하는 것을 방지합니다.
+        secondarySigners:
+          type: array
+          description: |
+            다중 서명 트랜잭션에서 추가 서명자들의 주소 목록을 나타내는 필드입니다.
+            기본 서명자(sender) 외에 트랜잭션에 서명한 계정들의 주소가 포함됩니다.
+            복잡한 권한 관리나 다중 승인이 필요한 트랜잭션에 사용됩니다.
+          items:
+            type: string
+        sender:
+          type: string
+          description: >
+            트랜잭션을 발생시킨 계정의 주소를 나타내는 필드입니다.
+
+            0x로 시작하는 64자리 16진수 문자열 형태로 제공되며, 트랜잭션의 주체를 식별합니다. 트랜잭션 수수료 지불과 시퀀스
+            번호 관리의 기준이 되는 계정입니다.
+        sequenceNumber:
+          type: integer
+          description: >
+            발신자 계정의 현재 시퀀스 번호를 나타내는 필드입니다.
+
+            계정별로 0부터 시작하여 트랜잭션마다 1씩 증가하며, 재사용 공격을 방지하고 트랜잭션의 순서를 보장합니다. 동일한 시퀀스
+            번호를 가진 트랜잭션은 중복 실행될 수 없습니다.
+        success:
+          type: boolean
+          description: |
+            트랜잭션의 실행 성공 여부를 나타내는 필드입니다.
+            true인 경우 트랜잭션이 성공적으로 실행되었음을, false인 경우 실행 중 오류가 발생했음을 의미합니다.
+        vmStatus:
+          type: string
+          description: >
+            트랜잭션의 실행 결과 상태를 나타내는 필드입니다.
+
+            성공 시 'Executed successfully'를 반환하며, 실패 시 구체적인 오류 메시지를 포함합니다. 트랜잭션
+            실패의 원인을 분석하고 문제를 해결하는 데 도움을 줍니다.
+        events:
+          type: array
+          description: |
+            트랜잭션 실행 중 발생한 이벤트들의 목록을 나타내는 필드입니다.
+            각 이벤트는 트랜잭션으로 인한 상태 변화나 중요 작업의 실행을 기록합니다.
+            트랜잭션의 영향을 추적하고 외부 시스템과의 연동을 위한 정보를 제공합니다.
+          items:
+            type: object
+            required:
+              - eventIndex
+              - eventType
+              - accountAddress
+              - data
+              - creationNumber
+              - sequenceNumber
+              - objectAddress
+              - objectOwnerAddress
+            properties:
+              eventIndex:
+                type: integer
+                description: |
+                  하나의 트랜잭션에서 발생한 여러 이벤트들 중 현재 이벤트의 순서를 나타내는 필드입니다.
+                  0부터 시작하여 이벤트 발생 순서대로 증가하며, 동일 트랜잭션 내 이벤트의 순서를 식별하는 데 사용됩니다.
+              eventType:
+                type: string
+                description: >
+                  이벤트의 타입을 나타내는 필드입니다.
+
+                  Move 모듈에서 정의된 이벤트 구조체의 전체 경로로, '계정주소::모듈이름::이벤트구조체명' 형식으로
+                  제공됩니다.
+
+                  이벤트의 종류를 식별하고 이벤트 데이터의 구조를 결정하는 데 사용됩니다.
+              accountAddress:
+                type: string
+                description: |
+                  이벤트를 발행한 리소스 소유자의 주소를 나타내는 필드입니다.
+                  0x로 시작하는 64자리 16진수 문자열 형태로 제공되며, 이벤트가 발생한 리소스의 소유자를 식별합니다.
+                  이벤트 핸들을 소유한 계정으로, 이벤트 조회 시 필터링 조건으로 사용될 수 있습니다.
+              data:
+                type: object
+                description: |
+                  이벤트에 포함된 데이터를 나타내는 필드입니다.
+                  이벤트 타입에 따라 다양한 형식의 데이터가 포함될 수 있습니다.
+                  예를 들어, 잔액 변동 이벤트의 경우 변동 전후 잔액 정보가 포함될 수 있습니다.
+              creationNumber:
+                type: integer
+                description: |
+                  이벤트 핸들의 생성 번호를 나타내는 필드입니다.
+                  이벤트 핸들을 생성할 때 할당된 고유한 번호로, 이벤트의 생성 순서를 식별하는 데 사용됩니다.
+              sequenceNumber:
+                type: integer
+                description: |
+                  이벤트 핸들의 시퀀스 번호를 나타내는 필드입니다.
+                  이벤트 핸들을 생성할 때 할당된 고유한 번호로, 이벤트의 생성 순서를 식별하는 데 사용됩니다.
+              objectAddress:
+                type: string
+                description: |
+                  Object 리소스에 대한 이벤트일 경우 해당 object의 주소를 나타내는 필드입니다.
+                  0x로 시작하는 64자리 16진수 문자열 형태로 제공되며, Object 기반 리소스의 고유 식별자입니다.
+                  Object 리소스와 관련된 이벤트를 추적하고 조회하는 데 사용됩니다.
+              objectOwnerAddress:
+                type: string
+                description: |
+                  objectAddress로 식별되는 Object의 소유자 주소를 나타내는 필드입니다.
+                  0x로 시작하는 64자리 16진수 문자열 형태로 제공되며, Object 소유자의 계정 주소를 식별합니다.
+                  Object 리소스의 소유권을 관리하고 이벤트 추적에 활용됩니다.
+        balanceInAccounts:
+          type: array
+          description: |
+            트랜잭션에서 자산을 수신한 계정들의 주소 목록을 나타내는 필드입니다.
+            balanceChanges 중 양수 값(입금)을 가진 계정들의 주소가 포함됩니다.
+            자산 이동의 수신자를 추적하고 입금 내역을 분석하는 데 사용됩니다.
+          items:
+            type: string
+        balanceOutAccounts:
+          type: array
+          description: |
+            트랜잭션에서 자산을 송신한 계정들의 주소 목록을 나타내는 필드입니다.
+            balanceChanges 중 음수 값(출금)을 가진 계정들의 주소가 포함됩니다.
+          items:
+            type: string
+        balanceChangedTokens:
+          type: array
+          description: |
+            트랜잭션으로 인해 잔액이 변동된 토큰들의 타입 목록을 나타내는 필드입니다.
+            각 토큰은 '모듈주소::모듈이름::구조체이름' 형식으로 제공됩니다.
+            트랜잭션이 영향을 미친 자산의 종류를 식별하고 자산별 변동 내역을 추적하는 데 사용됩니다.
+          items:
+            type: string
+        balanceChanges:
+          $ref: '#/components/schemas/AptosTokenBalanceChangeRequired'
+    EvmArgs:
+      type: object
+      required:
+        - name
+        - type
+        - value
+      properties:
+        name:
+          type: string
+          description: |
+            인자의 이름을 나타내는 필드입니다.
+        type:
+          type: string
+          description: |
+            인자의 타입을 나타내는 필드입니다.
+        value:
+          type: string
+          description: |
+            인자의 값을 나타내는 필드입니다.
+    EvmTransactionWithReceipt:
+      type: object
+      required:
+        - transactionHash
+        - transactionIndex
+        - blockHash
+        - blockNumber
+        - from
+        - to
+        - value
+        - input
+        - functionSelector
+        - nonce
+        - gas
+        - gasPrice
+        - gasUsed
+        - cumulativeGasUsed
+        - effectiveGasPrice
+        - contractAddress
+        - logsBloom
+        - timestamp
+      properties:
+        transactionHash:
+          type: string
+          description: |
+            트랜잭션의 해시를 나타내는 필드입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 제공됩니다.
+        transactionIndex:
+          type: string
+          description: |
+            트랜잭션의 인덱스를 나타내는 필드입니다. 블록 내에서의 순서를 나타냅니다. 10진수 문자열 형태로 제공됩니다.
+        blockHash:
+          type: string
+          description: |
+            블록의 해시를 나타내는 필드입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 제공됩니다.
+        blockNumber:
+          type: integer
+          description: |
+            블록 번호를 나타내는 필드입니다.
+        from:
+          type: string
+          description: |
+            트랜잭션을 발생시킨 주소를 나타내는 필드입니다. 0x로 시작하는 40자리의 16진수 문자열 형태로 제공됩니다.
+        to:
+          type: string
+          description: >
+            트랜잭션의 수신 주소를 나타내는 필드입니다. 컨트랙트 생성 트랜잭션의 경우 이 필드는 null을 반환합니다. 0x로
+            시작하는 40자리의 16진수 문자열 형태로 제공됩니다.
+        value:
+          type: string
+          description: |
+            트랜잭션에서 전송한 토큰의 수량을 나타내는 필드입니다. 10진수 문자열 형태로 제공됩니다.
+        input:
+          type: string
+          description: >
+            트랜잭션의 데이터를 나타내는 필드입니다. Native Token(ETH, MATIC 등) 전송의 경우 이 필드는 비어
+            있습니다. 0x로 시작하는 16진수 문자열 형태로 제공됩니다.
+        decodedInput:
+          type: object
+          description: >
+            트랜잭션의 input을 디코딩한 결과를 나타내는 필드입니다. withDecode 파라미터에 true를 입력한 경우에만
+            응답에 포함되며, 디코딩된 input을 기반으로 실행된 함수 데이터를 제공합니다. 함수를 식별할 수 없는 경우에는
+            withDecode가 true여도 이 필드가 제공되지 않습니다.
+          properties:
+            type:
+              type: string
+              description: >
+                디코딩된 데이터의 유형을 나타냅니다. 예를 들어, 스마트 컨트랙트의 함수 호출인 경우 "function"을
+                반환합니다.
+            name:
+              type: string
+              description: |
+                호출된 스마트 컨트랙트 함수의 이름을 나타내는 필드입니다. 함수 이름은 ABI 정의에 따라 결정됩니다.
+            signature:
+              type: string
+              description: >
+                스마트 컨트랙트 함수의 시그니처로, 함수명과 파라미터의 데이터 타입을 명시적으로 표현합니다. 함수의 고유성을
+                식별하는 데 사용됩니다.
+            args:
+              $ref: '#/components/schemas/EvmArgs'
+        functionSelector:
+          type: string
+          description: >
+            호출된 함수를 식별하는 4바이트 함수 셀렉터 값입니다. 함수 셀렉터는 함수 시그니처를 Keccak-256 해싱한 결과의 앞
+            4바이트를 의미합니다. 0x로 시작하는 8자리의 16진수 문자열 형태로 제공됩니다.
+        nonce:
+          type: integer
+          description: >
+            트랜잭션의 nonce 값을 나타내는 필드입니다. 트랜잭션의 중복 방지 및 순서를 결정하는 데 사용됩니다. 10진수 문자열
+            형태로 제공됩니다션
+        gas:
+          type: string
+          description: |
+            트랜잭션 실행을 위해 사용자가 할당하고자 하는 가스의 최대 양을 나타내는 필드입니다. 10진수 문자열 형태로 제공됩니다.
+        gasPrice:
+          type: string
+          description: >
+            사용자가 단위 가스당 지불할 의향이 있는 금액을 나타내는 필드입니다. EIP-1559(London Hard fork) 적용
+            이전의 트랜잭션 모델(고정된 수수료)에서 사용되는 필드이며, 네트워크 혼잡도에 따라 사용자가 수동으로 가격을 설정할 수
+            있습니다. 10진수 문자열 형태로 제공됩니다.
+        maxFeePerGas:
+          type: string
+          description: >
+            사용자가 단위 가스당 지불할 의향이 있는 최대 수수료를 나타내는 필드입니다. 이는 baseFeePerGas와
+            MaxPriorityFeePerGas의 합보다 크거나 같아야 합니다. EIP-1559(London Hard fork)에서
+            도입된 변동적인 수수료 모델의 일부입니다. 따라서 도입 이전 트랜잭션에서는 해당 필드가 제공되지 않습니다. 10진수 문자열
+            형태로 제공됩니다.
+        maxPriorityFeePerGas:
+          type: string
+          description: >
+            사용자가 단위 가스당 지불할 의향이 있는 최대 우선순위 수수료를 나타내는 필드입니다. 이는 baseFeePerGas와
+            MaxPriorityFeePerGas의 합보다 크거나 같아야 합니다. EIP-1559(London Hard fork)에서
+            도입된 변동적인 수수료 모델의 일부입니다. 따라서 도입 이전 트랜잭션에서는 해당 필드가 제공되지 않습니다. 10진수 문자열
+            형태로 제공됩니다.
+        gasUsed:
+          type: string
+          description: |
+            트랜잭션 실행에서 실제로 사용된 가스의 양을 나타내는 필드입니다. 10진수 문자열 형태로 제공됩니다.
+        cumulativeGasUsed:
+          type: string
+          description: >
+            현재 트랜잭션까지 포함하여, 블록 내에서 처리된 모든 트랜잭션들에 사용된 가스의 총합을 나타내는 필드입니다. 10진수
+            문자열 형태로 제공됩니다.
+        effectiveGasPrice:
+          type: string
+          description: >
+            트랜잭션 실행에서 실제로 단위 가스당 지불한 평균 가격을 나타내는 필드입니다. EIP-1559(London Hard
+            fork)에서 도입된 변동적인 수수료 모델의 일부입니다. 따라서 도입 이전 트랜잭션에서는 해당 필드가 제공되지 않습니다.
+            10진수 문자열 형태로 제공됩니다.
+        contractAddress:
+          type: string
+          description: >
+            트랜잭션이 컨트랙트 생성 트랜잭션인 경우, 생성된 컨트랙트 주소를 나타내는 필드입니다. 0x로 시작하는 40자리의 16진수
+            문자열 형태로 제공됩니다.
+        type:
+          type: string
+          description: >
+            트랜잭션의 타입을 나타내는 필드입니다. 블록 시점에 따라 이 필드가 제공되지 않을 수 있습니다. 10진수 문자열 형태로
+            제공됩니다.
+
+            - 0: 이 값은 표준 이더리움 트랜잭션을 나타냅니다. 이는 EIP-2718 적용 이전의 전통적인 트랜잭션 형식입니다.
+
+            - 1: EIP-2930에서 도입된 'Access List' 트랜잭션을 나타냅니다. 이 유형의 트랜잭션은 가스 비용을
+            최적화하기 위해 특정 주소와 저장소 슬롯에 대한 접근 목록을 포함합니다.
+
+            - 2: EIP-1559에서 도입된 'Fee Market' 트랜잭션을 나타냅니다. 이 유형의 트랜잭션은 가변적인 가스 비용
+            모델을 사용하며, maxFeePerGas와 maxPriorityFeePerGas 필드를 포함합니다.
+
+            - 3: EIP-4844에서 도입된 'Blob Transaction'을 나타냅니다. 이 유형의 트랜잭션은 본문과 별도로
+            추가적인 blob 데이터를 포함하며, 롤업(Rollup) 등 Layer2 솔루션과 연계하여 데이터 가용성을 개선하고
+            확장성을 지원합니다.
+
+            - 4: EIP-7702에서 도입된 확장된 트랜잭션 유형으로, 서명/승인 정보를 담은 authorizationList
+            필드를 포함합니다. 이 필드는 다중 서명 또는 추가 인증 절차가 필요한 경우 사용됩니다.
+        status:
+          type: string
+          description: >
+            트랜잭션의 상태를 나타내는 필드입니다. 1이면 성공, 0이면 실패를 나타냅니다. Byzantium Hard Fork 이전의
+            트랜잭션에서는 해당 필드가 제공되지 않습니다. 10진수 문자열 형태로 제공됩니다.
+        logsBloom:
+          type: string
+          description: |
+            트랜잭션에 포함된 모든 로그 블룸을 나타내는 필드입니다. 0x로 시작하는 512자리 16진수 문자열 형태로 제공됩니다.
+        accessList:
+          type: array
+          description: |
+            트랜잭션의 접근 목록을 나타내는 필드입니다.
+          items:
+            type: object
+            required:
+              - address
+              - storageKeys
+            properties:
+              address:
+                type: string
+                description: >
+                  트랜잭션에서 접근한 컨트랙트 주소를 나타내는 필드입니다. 0x로 시작하는 40자리의 16진수 문자열 형태로
+                  제공됩니다.
+              storageKeys:
+                type: array
+                description: |
+                  트랜잭션에서 접근한 컨트랙트의 storage key 목록을 나타내는 필드입니다.
+                items:
+                  type: string
+                  description: >
+                    트랜잭션에서 접근한 컨트랙트의 storage key를 나타내는 필드입니다. 0x로 시작하는 64자리 16진수
+                    문자열 형태로 제공됩니다.
+        timestamp:
+          type: integer
+          description: |
+            트랜잭션이 발생한 시간을 나타내는 필드입니다. 10진수 문자열 형태로 제공됩니다.
+        authorizationList:
+          type: array
+          description: >
+            트랜잭션의 서명/승인 정보를 담은 목록을 나타내는 필드입니다. 각 항목은 서명 검증에 필요한 체인 ID, nonce,
+            서명값 등을 포함하며, EIP-7702 적용 이후부터 제공됩니다. 네트워크에 따라 지원 여부와 적용 시점이 달라질 수
+            있으며, 특정 트랜잭션 타입(예: type이 4 이상)에서만 사용되므로 트랜잭션 유형에 따라 해당 필드가 없을 수도
+            있습니다.
+          items:
+            type: object
+            required:
+              - chainId
+              - nonce
+              - address
+              - yParity
+              - r
+              - s
+            properties:
+              chainId:
+                type: string
+                description: >
+                  해당 승인 정보가 유효한 체인의 ID를 나타내며, 서명 검증 및 리플레이 공격 방지에 활용됩니다. 이 필드는
+                  10진수 문자열 형태로 표현합니다.
+              nonce:
+                type: string
+                description: >
+                  이 승인 항목의 고유성을 보장하고, 리플레이 공격을 방지하기 위한 nonce 값입니다. 이 필드는 10진수
+                  문자열 형태로 표현합니다.
+              address:
+                type: string
+                description: >
+                  승인(서명)을 제공하는 계정의 주소를 나타내는 필드입니다. 0x로 시작하는 40자리의 16진수 문자열 형태로
+                  제공됩니다.
+              yParity:
+                type: string
+                description: >
+                  서명된 공개키의 y좌표 선택을 위한 1비트 패리티 값입니다. 보통 0 또는 1이며, 공개키 복원에 사용됩니다.
+                  이 필드는 10진수 문자열 형태로 표현합니다.
+              r:
+                type: string
+                description: >
+                  ECDSA 서명의 첫 번째 값으로, 서명에 사용된 난수와 곡선 연산을 통해 생성됩니다. 공개키 복원 및 서명
+                  검증에 사용됩니다.
+              s:
+                type: string
+                description: >
+                  ECDSA 서명의 두 번째 값으로, 메시지 해시와 개인 키를 기반으로 계산됩니다. 서명의 유효성을 검증하는 데
+                  필수입니다.ß
+    EvmLog:
+      type: object
+      required:
+        - contractAddress
+        - transactionHash
+        - transactionIndex
+        - blockHash
+        - blockNumber
+        - data
+        - logIndex
+        - removed
+        - topics
+      properties:
+        contractAddress:
+          type: string
+          description: |
+            로그를 생성한 컨트랙트 주소를 나타내는 필드입니다. 0x로 시작하는 40자리의 16진수 문자열 형태로 제공됩니다.
+        transactionHash:
+          type: string
+          description: |
+            로그를 생성한 트랜잭션의 해시를 나타내는 필드입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 제공됩니다.
+        transactionIndex:
+          type: string
+          description: >
+            로그를 생성한 트랜잭션의 인덱스를 나타내는 필드입니다. 블록 내에서의 순서를 나타냅니다. 10진수 문자열 형태로
+            제공됩니다.
+        blockHash:
+          type: string
+          description: |
+            로그를 생성한 블록의 해시를 나타내는 필드입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 제공됩니다.
+        blockNumber:
+          type: integer
+          description: |
+            로그를 생성한 블록 번호를 나타내는 필드입니다.
+        data:
+          type: string
+          description: |
+            로그의 데이터를 나타내는 필드입니다. 0x로 시작하는 16진수 문자열 형태로 제공됩니다.
+        logIndex:
+          type: string
+          description: |
+            로그의 인덱스를 나타내는 필드입니다. 트랜잭션에서 발생한 이벤트의 순서를 의미합니다. 10진수 문자열 형태로 제공됩니다.
+        removed:
+          type: boolean
+          description: >
+            로그가 제거되었는지 여부를 나타내는 필드입니다. 체인의 재구성(Reorg)으로 인해 로그가 제거된 경우 true를
+            반환합니다.
+        topics:
+          type: array
+          description: |
+            인덱스된 로그의 인자를 나타내는 필드입니다. 최대 4개의 토픽을 가질 수 있습니다.
+          items:
+            type: string
+            description: |
+              로그의 토픽을 나타내는 필드입니다. 0x로 시작하는 64자리 16진수 문자열 형태로 제공됩니다.
+    EvmDecodedLog:
+      type: object
+      description: |
+        스마트 컨트랙트의 이벤트 정의에 따라 디코딩된 정보를 제공하며,
+      required:
+        - name
+        - eventFragment
+        - signature
+        - eventHash
+        - args
+      properties:
+        name:
+          type: string
+          description: |
+            로그의 이벤트 이름을 나타내는 필드입니다.
+        eventFragment:
+          type: string
+          description: |
+            로그의 이벤트 프래그먼트를 나타내는 필드입니다.
+        signature:
+          type: string
+          description: |
+            로그의 이벤트 시그니처를 나타내는 필드입니다.
+        eventHash:
+          type: string
+          description: |
+            로그의 이벤트 해시를 나타내는 필드입니다.
+        args:
+          $ref: '#/components/schemas/EvmArgs'
+    XrplAsset:
+      type: object
+      required:
+        - currency
+        - issuer
+      properties:
+        currency:
+          type: string
+          description: >
+            자산의 통화 코드를 나타냅니다. 일반적으로 ISO 4217 표준 코드(예: "USD", "EUR")를 사용하지만, 필요에
+            따라 160비트 커스텀 코드도 사용할 수 있습니다. 커스텀 코드는 40자리 길이의 16진수 문자열로 표현되며, 특정
+            프로젝트나 플랫폼에서 정의한 독자적인 자산(예: "SOLO")을 나타낼 때 사용됩니다. 한편, XRP의 경우에는
+            "XRP"라는 고정된 문자열이 currency 필드에 사용되며, IOU 자산과 동일한 구조로 반환됩니다.
+          example: USD
+        issuer:
+          type: string
+          description: >
+            자산을 발행한 계정의 주소입니다. 동일한 통화 코드(currency)라 하더라도, 발행자에 따라 자산의 신뢰도와 위험성이
+            달라질 수 있습니다. 따라서 XRP Ledger에서는 통화 코드와 발행자(issuer)의 조합으로 자산을 고유하게
+            식별합니다. 각 자산의 신뢰성은 발행자의 평판에 크게 좌우됩니다. 이 필드는 25~35자리 길이의 Base58 인코딩
+            문자열이며, 항상 'r'로 시작합니다. 단, XRP는 네이티브 자산이므로 발행자가 없으며, 이 경우 issuer는 빈
+            문자열("")로 표시됩니다.
+          example: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+    XrplAmount:
+      type: object
+      required:
+        - currency
+        - issuer
+        - value
+      properties:
+        currency:
+          type: string
+          description: >
+            자산의 통화 코드를 나타냅니다. 일반적으로 ISO 4217 표준 코드(예: "USD", "EUR")를 사용하지만, 필요에
+            따라 160비트 커스텀 코드도 사용할 수 있습니다. 커스텀 코드는 40자리 길이의 16진수 문자열로 표현되며, 특정
+            프로젝트나 플랫폼에서 정의한 독자적인 자산(예: "SOLO")을 나타낼 때 사용됩니다. 한편, XRP의 경우에는
+            "XRP"라는 고정된 문자열이 currency 필드에 사용되며, IOU 자산과 동일한 구조로 반환됩니다.
+          example: USD
+        issuer:
+          type: string
+          description: >
+            자산을 발행한 계정의 주소입니다. 동일한 통화 코드(currency)라 하더라도, 발행자에 따라 자산의 신뢰도와 위험성이
+            달라질 수 있습니다. 따라서 XRP Ledger에서는 통화 코드와 발행자(issuer)의 조합으로 자산을 고유하게
+            식별합니다. 각 자산의 신뢰성은 발행자의 평판에 크게 좌우됩니다. 이 필드는 25~35자리 길이의 Base58 인코딩
+            문자열이며, 항상 'r'로 시작합니다. 단, XRP는 네이티브 자산이므로 발행자가 없으며, 이 경우 issuer는 빈
+            문자열("")로 표시됩니다.
+          example: rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq
+        value:
+          type: string
+          description: >
+            자산의 수량을 문자열(string) 형태로 반환합니다. 수량 표현 방식은 currency 값에 따라 달라집니다.
+            currency가 "XRP"인 경우, 이 값은 표준 XRP 단위로 표기되며, 1 XRP는 1,000,000 drop에
+            해당합니다. IOU 자산의 경우에도 발행자가 정의한 정밀도(precision)를 기반으로 표현됩니다.
+          example: '100.5'
+    XrplTransactionDetails:
+      type: object
+      description: >
+        트랜잭션과 관련된 상세 정보를 포함하는 객체입니다. 이 객체는 트랜잭션 처리에 필요한 추가 데이터 및 세부 필드들을 포함할 수
+        있습니다.
+      oneOf:
+        - title: AMM
+          required:
+            - asset
+            - asset2
+            - amount
+            - amount2
+            - tradingFee
+            - effectivePrice
+            - lpTokenIn
+            - lpTokenOut
+            - bidMin
+            - bidMax
+            - authAccounts
+          description: |
+            AMM 트랜잭션의 상세 정보를 나타내는 객체입니다.
+          properties:
+            asset:
+              description: >
+                AMM 풀에서 사용되는 첫 번째 자산을 나타냅니다. Asset2와 함께 구성되며, 같은 통화 코드와 발행자를 가질
+                수 없습니다.
+              $ref: '#/components/schemas/XrplAsset'
+            asset2:
+              description: >
+                AMM 풀에서 사용되는 두 번째 자산을 나타냅니다. Asset과 함께 구성되며, 같은 통화 코드와 발행자를 가질 수
+                없습니다.
+              $ref: '#/components/schemas/XrplAsset'
+            amount:
+              description: >
+                AMM 풀에 추가되는 첫 번째 자산의 양을 나타냅니다. AMMWithdraw에서는 인출할 첫 번째 자산을
+                나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            amount2:
+              description: >
+                AMM 풊에 추가되는 두 번째 자산의 양을 나타냅니다. AMMWithdraw에서는 인출할 두 번째 자산을
+                나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            tradingFee:
+              type: integer
+              description: >
+                1/100,000 단위로 설정되는 거래 수수료 비율을 나타냅니다. 1은 0.001%, 최대값은
+                1000(1%)입니다.
+              example: 250
+            effectivePrice:
+              description: |
+                AMMDeposit에서 유효한 최대 가격을 설정합니다. AMMWithdraw에서는 최소 보장 가격을 설정합니다.
+              $ref: '#/components/schemas/XrplAmount'
+            lpTokenIn:
+              description: |
+                AMM 풀에서 반환하는 LP 토큰의 수량을 나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            lpTokenOut:
+              description: |
+                AMM 풊에 유동성을 공급한 대가로 발행되는 LP 토큰의 수량을 나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            bidMin:
+              description: |
+                AMM 풊에서 설정한 최소 입찰 금액을 나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            bidMax:
+              description: |
+                AMM 풊에서 설정한 최대 입찰 금액을 나타냅니다.
+              $ref: '#/components/schemas/XrplAmount'
+            authAccounts:
+              type: array
+              description: >
+                할인된 수수료를 적용할 수 있는 최대 4개의 추가 계정을 정의합니다. 이 목록에는 트랜잭션 발신자의 주소를 포함할
+                수 없습니다. 각 계정 주소는 25~35자리 길이의 Base58 인코딩 문자열로, 'r'로 시작하는 형식을
+                가집니다.
+              items:
+                type: string
+              example:
+                - rEqFohwoXqGFVik15uqF5nBdzfd5qEFh1X
+                - rBTwLga3i2gz3doX6Gva3MgEV8ZCD8jjah
+            holder:
+              type: string
+              description: >
+                AMMClawback 트랜잭션에서 회수 대상이 되는 계정 주소를 나타냅니다. 이는 AMM 풀 내 특정 자산을
+                보유하고 있는 계정으로, 발행자가 해당 계정에서 자산을 회수할 수 있도록 지정됩니다.
+              example: rBTwLga3i2gz3doX6Gva3MgEV8ZCD8jjah
+        - title: Check
+          required:
+            - destination
+            - sendMax
+            - destinationTag
+            - expiration
+            - invoiceId
+            - amount
+            - deliverMin
+            - checkId
+          description: |
+            Check 트랜잭션의 상세 정보를 나타내는 객체입니다.
+          properties:
+            destination:
+              type: string
+              description: >
+                수표의 수취인 계정 주소가 표시됩니다. 주소는 Base58로 인코딩된 문자열이며, 항상 'r'로 시작하고
+                25~35자의 길이를 가집니다.
+              example: rBTwLga3i2gz3doX6Gva3MgEV8ZCD8jjah
+            sendMax:
+              description: >
+                수표 발행자가 해당 수표를 통해 송금할 수 있도록 설정한 최대 자산 수량입니다. 수취인은 이 값과 동일한 통화 및
+                발행자의 자산만 받을 수 있으며, 수수료를 포함한 총 금액은 이 값을 초과할 수 없습니다.
+              $ref: '#/components/schemas/XrplAmount'
+            destinationTag:
+              type: integer
+              description: >
+                수신자 계정 내에서 특정 사용자를 식별하기 위한 태그입니다. 거래소, 호스팅 지갑 등 여러 사용자가 하나의 주소를
+                공유할 때 사용됩니다.
+              example: 1337
+            expiration:
+              type: integer
+              description: >
+                수표의 만료 시간이 초 단위 정수로 표시됩니다. 이 값은 Ripple Epoch(2000년 1월 1일 00:00
+                UTC)를 기준으로 경과한 시간이며, 실제 Unix 타임스탬프로 변환하려면 여기에 946,684,800초를 더해야
+                합니다. 수표는 만료 시간 이후에는 사용할 수 없습니다.
+              example: 673094400
+            invoiceId:
+              type: string
+              description: >
+                이 수표와 관련된 외부 거래나 청구서를 식별하기 위해 사용되는 256비트 해시값(64자리 16진수 문자열)입니다.
+                응답에 포함될 경우, 수표가 특정 외부 요청과 연결되어 있음을 나타냅니다.
+              example: 6F1DFD1D0FE8A32E40E1F2C05CF1C15545BAB56B617F9C6C2D63A6B704BEF59B
+            amount:
+              description: >
+                수표를 현금화할 때 실제로 적용된 자산의 수량이 표시됩니다. 이 값은 수표의 sendMax 필드와 동일한 자산 코드
+                및 발행자를 가져야 하며, 그 범위 내에서 정해집니다. CheckCash 트랜잭션에서는 amount 또는
+                deliverMin 중 하나만 포함되며, 두 필드가 동시에 존재할 수는 없습니다.
+              $ref: '#/components/schemas/XrplAmount'
+            deliverMin:
+              description: >
+                수취인이 수령한 최소 보장 자산 수량이 표시됩니다. CheckCash 트랜잭션에서 가능한 최대한 많은 금액을
+                수령하는 방식에서 사용되며, amount 필드와는 상호 배타적으로, 두 필드를 함께 포함할 수 없습니다.
+                CheckCash 트랜잭션에서는 deliverMin 또는 amount 중 하나만 포함되며, 두 필드는 동시에
+                포함되지 않습니다.
+              $ref: '#/components/schemas/XrplAmount'
+            checkId:
+              type: string
+              description: |
+                해당 수표의 고유 ID가 64자리 16진수 문자열로 표시됩니다. 수표를 취소하거나 현금화할 때 이 값을 참조합니다.
+              example: 49647F0D748DC3FE26BDACBC57F251AADEFFF391403EC9BF87C97F67E9977FB0
+    XrplTransaction:
+      type: object
+      required:
+        - ledgerIndex
+        - ledgerTimestamp
+        - transactionIndex
+        - transactionHash
+        - transactionType
+        - transactionResult
+        - account
+        - sequence
+        - signingPubKey
+        - fee
+        - transactionCategory
+      properties:
+        ledgerIndex:
+          type: integer
+          description: >
+            트랜잭션이 포함된 Ledger의 순번을 나타내는 필드입니다. 이를 통해 해당 트랜잭션이 어느 Ledger에 기록되었는지
+            확인할 수 있습니다.
+          example: 95444296
+        ledgerTimestamp:
+          type: integer
+          description: >
+            이 값은 해당 트랜잭션이 포함된 Ledger의 close time을 Unix 타임스탬프 형식으로 변환한 결과를 반환합니다.
+            XRP Ledger에서 close time은 Ripple Epoch(2000년 1월 1일 00:00 UTC)를 기준으로 초
+            단위로 기록됩니다. 반면, 일반적인 Unix 타임스탬프는 Unix Epoch(1970년 1월 1일 00:00 UTC)를
+            기준으로 하며, 이 둘 사이에는 946,684,800초의 차이가 있습니다. 따라서 ledgerTimestamp는
+            Ledger에 기록된 close time에 946,684,800초를 더해 계산됩니다.
+          example: 1744608171
+        transactionIndex:
+          type: integer
+          description: >
+            Ledger 내에서 해당 트랜잭션의 처리 순서를 나타내는 인덱스입니다. 이 값은 Ledger 내 트랜잭션들의 순서를
+            파악하는 데 사용됩니다.
+          example: 1
+        transactionHash:
+          type: string
+          description: >
+            트랜잭션을 고유하게 식별하는 256비트(64자리 16진수) 암호화 해시값입니다. 트랜잭션 데이터의 무결성 및 식별에
+            사용됩니다.
+          example: 0D1DDF6974EA31918EB531F9212FC76BC47BCE9193839496474010D133C0BB1E
+        transactionType:
+          type: string
+          description: >
+            트랜잭션의 종류를 나타내는 문자열입니다. Payment, OfferCreate, EscrowCreate 등 다양한 트랜잭션
+            유형을 구분하며, 처리 방식에 따라 분류됩니다.
+          example: Payment
+        transactionResult:
+          type: string
+          description: >
+            트랜잭션 처리 결과를 나타내는 문자열로, 'tesSUCCESS'와 같이 결과 코드로 표시됩니다. 이를 통해 트랜잭션의 성공
+            여부를 확인할 수 있습니다.
+          example: tesSUCCESS
+        account:
+          type: string
+          description: >
+            해당 트랜잭션을 발생시킨 계정 주소입니다. 계정 주소는 25~35자리 길이의 Base58 인코딩 문자열로, 'r'로
+            시작하는 형식을 가집니다.
+          example: rEqFohwoXqGFVik15uqF5nBdzfd5qEFh1X
+        sequence:
+          type: integer
+          description: |
+            계정에서 발행한 트랜잭션의 순차 번호로, 중복 제출이나 재생 공격을 방지하기 위해 사용됩니다.
+          example: 94536309
+        lastLedgerSequence:
+          type: integer
+          description: >
+            트랜잭션이 유효한 마지막 Ledger의 순번을 나타냅니다. 이 값 이후의 Ledger에서는 해당 트랜잭션이 처리되지
+            않습니다.
+          example: 95444315
+        ticketSequence:
+          type: integer
+          description: |
+            티켓 기반 트랜잭션의 경우, 티켓 번호를 나타내는 값입니다. 티켓을 사용하는 트랜잭션에 한해 존재합니다.
+          example: 5
+        signingPubKey:
+          type: string
+          description: |
+            트랜잭션 서명에 사용된 공개키로, 보통 33바이트(66자리 16진수) 압축된 공개키 형식으로 표현됩니다.
+          example: ED1BCAE2B5F146BF30F40D36D4D8565A7E6F758B7062288336BE74D969E4543A19
+        txnSignature:
+          type: string
+          description: |
+            트랜잭션 서명에 사용된 공개키로 생성된 트랜잭션 서명 값입니다. 해당 서명은 트랜잭션 검증 및 인증에 사용됩니다.
+          example: >-
+            744E21E3E298BC06B874EA43ABDEB762A23EEA3630F6DD4215AD32C7B35C2C630777DDC3687245766E3CA7BF0B747A085E44
+        fee:
+          type: string
+          description: >
+            트랜잭션 처리 수수료를 나타내며, XRP 수량(XRP 단위)을 문자열로 표현됩니다. 이 값은 XRP 단위로 표기되며, 1
+            XRP는 1,000,000 drop에 해당합니다
+          example: '0.000012'
+        flags:
+          type: string
+          description: >
+            트랜잭션에 적용된 플래그 값을 나타냅니다. 각 비트는 특정 옵션이나 동작을 제어하며, 기본값은 0으로 설정되는 경우가
+            많습니다.
+          example: '131072'
+        accountTxnId:
+          type: string
+          description: >
+            이 필드는 다른 트랜잭션을 식별하는 256비트 해시값입니다. 만약 이 값을 설정하면, 해당 트랜잭션은 송신 계정의 가장
+            최근 트랜잭션 ID와 일치해야만 유효합니다. 이 필드는 트랜잭션의 중복 전송을 방지하거나, 이전 트랜잭션 이후 계정 상태가
+            변경되지 않았음을 확인하는 용도로 사용됩니다
+          example: D84B7A07E9FAD27D8782DAF4A5AD8C8C4D1D1F18E9D62D0384A2E1A2A4D3AD11
+        sourceTag:
+          type: integer
+          description: >
+            송신자가 트랜잭션을 보낼 때 함께 지정할 수 있는 32비트 부호 없는 정수 값입니다. 주로 여러 사용자가 공유하는
+            주소(예: 거래소나 호스팅 지갑)에서 송신 사용자를 식별하는 데 사용됩니다. 즉, 수신자가 "누가 보냈는지"를 정확히 알
+            수 있도록 도와주는 추가 정보입니다.
+          example: 123456
+        signers:
+          type: array
+          description: |
+            트랜잭션에 서명한 계정 정보를 나타내는 배열입니다. 각 객체는 서명한 계정의 주소, 서명 값, 공개키 정보를 포함합니다.
+          items:
+            type: object
+            required:
+              - account
+              - txnSignature
+              - signingPubKey
+            properties:
+              account:
+                type: string
+                description: >
+                  트랜잭션에 서명한 계정 주소입니다. 계정 주소는 25~35자리 길이의 Base58 인코딩 문자열로, 'r'로
+                  시작하는 형식을 가집니다.
+                example: rEqFohwoXqGFVik15uqF5nBdzfd5qEFh1X
+              txnSignature:
+                type: string
+                description: >
+                  해당 서명 계정이 생성한 트랜잭션 서명 값으로, 트랜잭션의 유효성 검증에 사용됩니다. 이 서명은 DER 형식으로
+                  인코딩되어 있으며, 길이는 가변적이나 보통 70~80자리의 16진수 문자열입니다.
+                example: >-
+                  3044022061BFBBFF27890E13EB1B5B106042AF497FC57846B31CE633A5AD6B5C8736DDFF0220153FA9C62AAC532120F9CBCCED44A680D233DF96204E7CC3C3820E4C887006AC
+              signingPubKey:
+                type: string
+                description: |
+                  트랜잭션 서명에 사용된 공개키로, 보통 33바이트(66자리 16진수) 압축된 공개키 형식으로 표현됩니다.
+                example: >-
+                  ED1BCAE2B5F146BF30F40D36D4D8565A7E6F758B7062288336BE74D969E4543A19
+        memos:
+          type: array
+          description: |
+            트랜잭션에 첨부된 메모 데이터를 포함하는 객체 배열입니다. 각 메모 객체는 메모 내용, 형식 등의 추가 정보를 제공합니다.
+          items:
+            type: object
+            required:
+              - memoData
+              - memoFormat
+              - memoType
+            properties:
+              memoData:
+                type: string
+                description: |
+                  메모의 내용을 포함하는 임의의 16진수 문자열입니다. 자유롭게 입력할 수 있습니다.
+                example: 72656e6577206d656d6f
+              memoFormat:
+                type: string
+                description: |
+                  메모의 인코딩 방식을 설명하는 16진수 문자열입니다. 일반적으로 MIME 타입을 지정하는 데 사용됩니다.
+                example: 746578742f706c61696e
+              memoType:
+                type: string
+                description: >
+                  메모의 유형을 설명하는 16진수 문자열입니다. 일반적으로 RFC 5988에 정의된 URL과 같은 고유한 관계를
+                  나타냅니다.
+                example: 68747470733a2f2f6578616d706c652e636f6d
+        transactionCategory:
+          type: string
+          description: >
+            트랜잭션의 분류 정보를 나타내는 열거형 문자열입니다. 가능한 값에는 AMM, Check, Escrow, Offer,
+            Payment, Payment Channel 등이 있으며, 각 분류는 해당 트랜잭션 유형(예: Payment,
+            OfferCreate 등)에 따라 정의됩니다.
+          example: Payment
+        transactionDetails:
+          $ref: '#/components/schemas/XrplTransactionDetails'
+        balanceChanges:
+          type: array
+          description: >
+            트랜잭션으로 인해 발생한 계정별 잔액 변동 내역을 포함하는 객체 배열입니다. 각 객체는 변경된 계정, 변동 금액, 통화
+            종류 등을 명시합니다.
+          items:
+            $ref: '#/components/schemas/XrplTokenBalanceChangeRequired'
+        tokenTransfers:
+          type: array
+          description: >
+            트랜잭션에 포함된 토큰 전송 내역을 나타내는 객체 배열입니다. 각 객체는 전송된 토큰의 종류, 전송 금액, 송수신 계정
+            등의 정보를 포함합니다.
+          items:
+            $ref: '#/components/schemas/XrplTokenTransfer'
+        balanceOutAccounts:
+          type: array
+          description: >
+            트랜잭션에서 발생한 모든 송·수신을 합산한 결과, 최종 잔고 변동이 0보다 작은(감소한) 계정 주소 목록입니다.
+            Native Token(XRP)과 Issued Token 잔고 변동을 모두 반영합니다.
+          items:
+            type: string
+            description: |
+              잔고 감소가 확정된 계정 주소
+            example: rEqFohwoXqGFVik15uqF5nBdzfd5qEFh1X
+        balanceInAccounts:
+          type: array
+          description: >
+            트랜잭션에서 발생한 모든 송·수신을 합산한 결과, 최종 잔고 변동이 0보다 큰(증가한) 계정 주소 목록입니다. Native
+            Token(XRP)과 Issued Token 잔고 변동을 모두 반영합니다.
+          items:
+            type: string
+            description: |
+              잔고 증가가 확정된 계정 주소
+            example: rEqFohwoXqGFVik15uqF5nBdzfd5qEFh1X
+        balanceChangedTokens:
+          type: array
+          description: >
+            트랜잭션 전체를 통산했을 때 최종 순잔고 변동이 0이 아닌 토큰의 식별자 목록입니다. 각 항목은
+            'currency-issuer' 형식을 따릅니다.
+          items:
+            type: string
+            description: |
+              'currency-issuer' 형식의 토큰 식별자
+            example: USD-rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz
   responses:
     '400':
       description: Bad Request
