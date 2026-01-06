@@ -9528,36 +9528,60 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - transactionHash
-              properties:
-                transactionHash:
-                  oneOf:
-                    - title: Aptos
-                      allOf:
-                        - $ref: '#/components/schemas/AptosTransactionHashParameter'
-                        - $ref: >-
+              oneOf:
+                - title: Aptos
+                  allOf:
+                    - type: object
+                      properties:
+                        transactionHash:
+                          $ref: '#/components/schemas/AptosTransactionHashParameter'
+                    - type: object
+                      properties:
+                        withBalanceChanges:
+                          $ref: >-
                             #/components/schemas/AptosWithBalanceChangesParameter
-                      default: >-
-                        0xaf2fba4b6190c4b87d9479f3eb62c093f452f27c388dab4afeae98ae8ec00005
-                    - title: EVM (Ethereum, Optimism, ...)
-                      allOf:
-                        - $ref: '#/components/schemas/EvmTransactionHashParameter'
-                        - $ref: '#/components/schemas/EvmWithLogsParameter'
-                        - $ref: '#/components/schemas/EvmWithDecodeParameter'
-                      default: >-
-                        0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
-                    - title: XRPL
-                      allOf:
-                        - $ref: '#/components/schemas/XrplTransactionHashParameter'
-                        - $ref: '#/components/schemas/XrplWithBalanceChangesParameter'
-                        - $ref: '#/components/schemas/XrplWithTokenTransfersParameter'
-                      default: >-
-                        0279a3b4d0e90af3632171aa3d4a82d99c97ccc7eeeea203a705901cff788308
-              default:
-                transactionHash: >-
-                  0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
+                  default:
+                    transactionHash: >-
+                      0xaf2fba4b6190c4b87d9479f3eb62c093f452f27c388dab4afeae98ae8ec00005
+                    withBalanceChanges: false
+                - title: EVM (Ethereum, Optimism, ...)
+                  allOf:
+                    - type: object
+                      properties:
+                        transactionHash:
+                          $ref: '#/components/schemas/EvmTransactionHashParameter'
+                    - type: object
+                      properties:
+                        withLogs:
+                          $ref: '#/components/schemas/EvmWithLogsParameter'
+                    - type: object
+                      properties:
+                        withDecode:
+                          $ref: '#/components/schemas/EvmWithDecodeParameter'
+                  default:
+                    transactionHash: >-
+                      0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
+                    withLogs: false
+                    withDecode: false
+                - title: XRPL
+                  allOf:
+                    - type: object
+                      properties:
+                        transactionHash:
+                          $ref: '#/components/schemas/XrplTransactionHashParameter'
+                    - type: object
+                      properties:
+                        withBalanceChanges:
+                          $ref: '#/components/schemas/XrplWithBalanceChangesParameter'
+                    - type: object
+                      properties:
+                        withTokenTransfers:
+                          $ref: '#/components/schemas/XrplWithTokenTransfersParameter'
+                  default:
+                    transactionHash: >-
+                      F8E2B034CDB4EE7D6C65A59098F730699887B4727860C1A6922C85BFA3EF8BBC
+                    withBalanceChanges: false
+                    withTokenTransfers: false
       responses:
         '200':
           description: Successful Response
