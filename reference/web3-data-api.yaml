@@ -10558,6 +10558,7 @@ components:
           - optimism
           - polygon
           - luniverse
+          - xrpl
         default: ethereum
     EvmAptosXrplNetworkParameter:
       name: network
@@ -10578,6 +10579,7 @@ components:
           - `optimism`: mainnet, sepolia
           - `polygon`: mainnet, amoy
           - `luniverse`: mainnet
+          - `xrpl`: mainnet
         enum:
           - mainnet
           - sepolia
