@@ -9,3 +9,4 @@
 - gettotaltransactioncountbyaccount
 - gettransactionbyhash
 - gettransactionbytransactionid
+- gettransactionbyversion
