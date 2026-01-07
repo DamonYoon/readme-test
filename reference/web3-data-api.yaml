@@ -9582,6 +9582,11 @@ paths:
                       F8E2B034CDB4EE7D6C65A59098F730699887B4727860C1A6922C85BFA3EF8BBC
                     withBalanceChanges: false
                     withTokenTransfers: false
+              default:
+                transactionHash: >-
+                  0xe63e77aae7d36723e08e2c38eb7ed9cedca1d402c624173661918345c31a3982
+                withLogs: false
+                withDecode: false
       responses:
         '200':
           description: Successful Response
