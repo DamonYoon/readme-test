@@ -10060,6 +10060,81 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /{chain}/{network}/blockchain/getTransactionByTransactionId:
+    post:
+      security:
+        - api_key: []
+      tags:
+        - Blockchain API
+      description: |
+        특정 트랜잭션의 정보를 조회합니다.
+      summary: Get Transaction By Transaction ID
+      operationId: getTransactionByTransactionId
+      parameters:
+        - $ref: '#/components/parameters/UtxoChainParameter'
+        - $ref: '#/components/parameters/UtxoNetworkParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  oneOf:
+                    - title: Bitcoin, Dogecoin
+                      $ref: '#/components/schemas/UtxoTransactionIdParameter'
+                      default:
+                        transactionId: >-
+                          b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
+                    - title: BitcoinCash
+                      $ref: '#/components/schemas/UtxoTransactionIdParameter'
+                      default:
+                        transactionId: >-
+                          0028e50ae5021b84597a32e6174c2f636b334457a41b0bdd872ba4d7b4f120f6
+              default:
+                transactionId: >-
+                  b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - title: Bitcoin, Dogecoin
+                    allOf:
+                      - $ref: '#/components/schemas/UtxoTransaction'
+                      - type: object
+                        properties:
+                          vin:
+                            $ref: '#/components/schemas/UtxoVin'
+                          vout:
+                            $ref: '#/components/schemas/UtxoVout'
+                  - title: BitcoinCash
+                    allOf:
+                      - $ref: '#/components/schemas/UtxoTransaction'
+                      - type: object
+                        properties:
+                          vin:
+                            allOf:
+                              - $ref: '#/components/schemas/UtxoVin'
+                              - $ref: '#/components/schemas/BitcioncashCashToken'
+                          vout:
+                            allOf:
+                              - $ref: '#/components/schemas/UtxoVout'
+                              - $ref: '#/components/schemas/BitcioncashCashToken'
+              example: {}
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
 components:
   securitySchemes:
     api_key:
@@ -14248,6 +14323,221 @@ components:
             description: |
               'currency-issuer' 형식의 토큰 식별자
             example: USD-rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz
+    UtxoTransactionIdParameter:
+      type: string
+      description: |
+        조회하고자 하는 트랜잭션의 ID를 지정하는 파라미터입니다. 0x를 제외한 64자리 16진수 문자열 형태로 입력할 수 있습니다.
+      pattern: ^[0-9a-fA-F]{64}$
+      examples:
+        - b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
+        - 0e285df9d6a218be913b30dd4185efce37d17a8b036a21ca8496bead75f1011f
+        - 0028e50ae5021b84597a32e6174c2f636b334457a41b0bdd872ba4d7b4f120f6
+    UtxoTransaction:
+      type: object
+      required:
+        - id
+        - index
+        - hash
+        - version
+        - lockTime
+        - size
+        - vsize
+        - weight
+        - fee
+        - vinCount
+        - voutCount
+        - blockHeight
+        - blockHash
+        - blockTimestamp
+      properties:
+        id:
+          type: string
+          description: |
+            트랜잭션의 고유 식별자로, 각 트랜잭션을 유일하게 식별할 수 있는 값입니다.
+        index:
+          type: integer
+          description: |
+            블록 내 트랜잭션의 인덱스를 나타냅니다. 0부터 시작하며, 블록에 포함된 트랜잭션의 순서를 의미합니다.
+        hash:
+          type: string
+          description: |
+            트랜잭션의 해시 값으로, 트랜잭션 데이터를 기반으로 계산된 고유한 식별자입니다. SegWit 데이터를 포함하여 계산됩니다.
+        version:
+          type: integer
+          description: |
+            트랜잭션의 버전을 나타내는 값으로, 트랜잭션 형식을 정의합니다.
+        lockTime:
+          type: integer
+          description: >
+            트랜잭션의 락타임으로, 트랜잭션이 유효해지는 조건(블록 높이 또는 UNIX 타임스탬프)을 나타냅니다. 값이 `0`이면
+            트랜잭션은 즉시 유효합니다.
+        size:
+          type: integer
+          description: |
+            트랜잭션의 실제 크기(바이트)로, 트랜잭션의 데이터 길이를 나타냅니다.
+        vsize:
+          type: integer
+          description: >
+            트랜잭션의 가상 크기(바이트)로, SegWit 데이터를 포함하여 블록에 포함되는 트랜잭션의 유효 크기를 나타냅니다.
+            BIP-141에 따라 가중치(weight)를 4로 나눈 후 올림 처리한 값입니다.
+        weight:
+          type: integer
+          description: |
+            트랜잭션의 가중치를 나타냅니다. BIP-141에 따라 가중치(weight)를 4로 나눈 후 올림 처리한 값입니다.
+        fee:
+          type: integer
+          description: |
+            트랜잭션의 수수료(BTC 단위)로, 입력 값에서 출력 값을 뺀 나머지 값입니다.
+        vinCount:
+          type: integer
+          description: |
+            입력(Vin) 트랜잭션의 개수를 나타냅니다.
+        voutCount:
+          type: integer
+          description: |
+            출력(Vout) 트랜잭션의 개수를 나타냅니다.
+        blockHeight:
+          type: integer
+          description: |
+            트랜잭션이 포함된 블록의 높이를 나타냅니다.
+        blockHash:
+          type: string
+          description: |
+            트랜잭션이 포함된 블록의 해시 값입니다.
+        blockTimestamp:
+          type: integer
+          description: |
+            트랜잭션이 포함된 블록의 생성 시간을 나타내며, UNIX 타임스탬프 형식으로 표시됩니다.
+    UtxoVin:
+      type: object
+      required:
+        - index
+        - address
+        - value
+        - coinbase
+        - voutTransactionId
+        - voutIndex
+        - scriptSig
+        - sequence
+        - witness
+      properties:
+        index:
+          type: integer
+          description: |
+            포함된 트랜잭션에서 Vin(입력)의 인덱스를 나타냅니다.
+        address:
+          type: string
+          description: |
+            Vin(입력)이 참조하는 이전 Vout(출력)의 주소로, 비트코인을 전송한 발송자의 주소를 나타냅니다.
+        value:
+          type: string
+          description: |
+            Vin(입력)에서 참조된 이전 Vout(출력)의 출력 값으로, 전송되는 비트코인의 양을 나타냅니다 (BTC 단위).
+        coinbase:
+          type: string
+          description: >
+            Coinbase 트랜잭션(채굴 보상 트랜잭션)에서 사용되며, 채굴자가 정의한 임의의 데이터를 포함합니다. 일반
+            트랜잭션에서는 null로 설정됩니다.
+        voutTransactionId:
+          type: string
+          description: >
+            Vin(입력)이 참조하는 이전 트랜잭션(Vout)의 ID를 나타냅니다. Coinbase 트랜잭션의 경우 이 필드는
+            null로 표기됩니다.
+        voutIndex:
+          type: integer
+          description: >
+            Vin(입력)이 참조하는 이전 Vout(출력)의 인덱스를 나타냅니다. Coinbase 트랜잭션의 경우 null로
+            표기됩니다.
+        scriptSig:
+          type: object
+          description: |
+            Vin(입력)의 서명 스크립트로, 참조된 이전 Vout(출력)의 잠금 스크립트를 해제하는 데 사용됩니다.
+          properties:
+            hex:
+              type: string
+              description: |
+                16진수 형식으로 표현된 Vin(입력)의 서명 스크립트입니다. SegWit 트랜잭션에서는 빈 문자열로 제공됩니다.
+              example: 3045022100b228e33e8b62f825...
+            asm:
+              type: string
+              description: |
+                어셈블리 형식으로 표현된 Vin(입력)의 서명 스크립트입니다. SegWit 트랜잭션에서는 빈 문자열로 제공됩니다.
+              example: OP_HASH160 OP_PUSHBYTES_20 000000...
+            type:
+              type: string
+              description: |
+                Vin(입력)의 서명 스크립트 유형을 나타냅니다 (예: `p2pkh`, `p2sh` 등).
+              example: witness_v0_keyhash
+    UtxoVout:
+      type: object
+      required:
+        - index
+        - address
+        - value
+        - scriptPubKey
+      properties:
+        index:
+          type: integer
+          description: |
+            Vout(출력)의 인덱스를 나타냅니다. 0부터 시작하며, 트랜잭션에 포함된 출력의 순서를 의미합니다.
+        address:
+          type: string
+          description: |
+            Vout(출력)에서 비트코인을 수신할 수신자의 주소를 나타냅니다.
+        value:
+          type: string
+          description: |
+            Vout(출력)에서 전송된 비트코인의 양을 나타냅니다 (BTC 단위).
+        scriptPubKey:
+          type: object
+          description: |
+            Vout(출력) 스크립트로, 비트코인을 사용하기 위한 조건(잠금 스크립트)을 정의합니다.
+          properties:
+            hex:
+              type: string
+              description: |
+                16진수 형식으로 표현된 Vout(출력)의 스크립트입니다.
+              example: >-
+                21025ac17459519db3146065c5a1738cd45315c38951e978d792492a6633c9cd6e75ac
+            asm:
+              type: string
+              description: |
+                어셈블리 형식으로 표현된 Vout(출력)의 스크립트입니다.
+              example: >-
+                025ac17459519db3146065c5a1738cd45315c38951e978d792492a6633c9cd6e75
+                OP_CHECKSIG
+            type:
+              type: string
+              description: |
+                Vout(출력) 스크립트의 유형을 나타냅니다 (예: pubkey, p2sh, p2pkh 등).
+              example: pubkey
+    BitcioncashCashToken:
+      type: object
+      required:
+        - tokenCategory
+        - tokenAmount
+        - tokenNftCapability
+        - tokenNftCommitment
+      properties:
+        tokenCategory:
+          type: string
+          description: >
+            CashTokens의 카테고리 ID입니다. 토큰 카테고리를 생성한 첫 번째 입력(outpoint)의 txid를
+            big-endian 16진수 문자열로 표현한 값이며, 동일 카테고리의 FT/NFT를 구분하는 고유 식별자입니다.
+        tokenAmount:
+          type: string
+          description: |
+            Fungible 토큰(FT)의 수량입니다. FT가 포함된 경우에만 존재하며, 10진수 문자열 형태로 표현한 값입니다.
+        tokenNftCapability:
+          type: string
+          description: >
+            Non-Fungible 토큰(NFT)의 권한입니다. NFT가 포함된 경우에만 존재하며, 'none'(변경/발행 불가),
+            'mutable'(commitment 변경 가능), 'minting'(추가 NFT 발행 가능) 중 하나입니다.
+        tokenNftCommitment:
+          type: string
+          description: >
+            NFT에 첨부된 commitment 데이터입니다. NFT가 포함되고 commitment 길이가 1바이트 이상일 때만
+            존재합니다. 최대 40바이트의 16진수 문자열로, NFT의 메타데이터나 고유 속성을 표현하는 데 사용됩니다.
   responses:
     '400':
       description: Bad Request
