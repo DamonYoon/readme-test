@@ -10078,20 +10078,27 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                transactionId:
-                  oneOf:
-                    - title: Bitcoin, Dogecoin
+              oneOf:
+                - title: Bitcoin, Dogecoin
+                  type: object
+                  required:
+                    - transactionId
+                  properties:
+                    transactionId:
                       $ref: '#/components/schemas/UtxoTransactionIdParameter'
-                      default:
-                        transactionId: >-
-                          b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
-                    - title: BitcoinCash
+                  default:
+                    transactionId: >-
+                      b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
+                - title: BitcoinCash
+                  type: object
+                  required:
+                    - transactionId
+                  properties:
+                    transactionId:
                       $ref: '#/components/schemas/UtxoTransactionIdParameter'
-                      default:
-                        transactionId: >-
-                          0028e50ae5021b84597a32e6174c2f636b334457a41b0bdd872ba4d7b4f120f6
+                  default:
+                    transactionId: >-
+                      0028e50ae5021b84597a32e6174c2f636b334457a41b0bdd872ba4d7b4f120f6
               default:
                 transactionId: >-
                   b3554fe6689fddb99446c78a3bb1d08f59cfa479505e87e9b948e14b42ea9aef
